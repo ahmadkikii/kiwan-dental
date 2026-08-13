@@ -1,17 +1,14 @@
 const cases = [
-  {title:"تجميل الأسنان الأمامية", desc:"ابتسامة هوليوود", before:"assets/case-1.jpg", after:"assets/case-1.jpg"},
-  {title:"تقويم الأسنان", desc:"تصحيح اصطفاف الأسنان", before:"assets/case-2.jpg", after:"assets/case-2.jpg"},
-  {title:"زرع الأسنان", desc:"تعويض سن مفقود بزراعة", before:"assets/case-3.jpg", after:"assets/case-3.jpg"},
-  {title:"ترميم الأسنان", desc:"ترميم الأسنان المتضررة", before:"assets/case-4.jpg", after:"assets/case-4.jpg"}
+  {title:"تجميل الأسنان الأمامية", desc:"ابتسامة هوليوود", image:"assets/case-cosmetic.svg"},
+  {title:"تقويم الأسنان", desc:"تصحيح اصطفاف الأسنان", image:"assets/case-orthodontics.svg"},
+  {title:"زرع الأسنان", desc:"تعويض سن مفقود بزراعة", image:"assets/case-implant.svg"},
+  {title:"ترميم الأسنان", desc:"ترميم الأسنان المتضررة", image:"assets/case-restorative.svg"}
 ];
 
 const grid = document.getElementById("cases-grid");
 grid.innerHTML = cases.map((c) => `
   <article class="case-card">
-    <div class="case-images">
-      <div class="case-side"><img src="${c.before}" alt="قبل - ${c.title}"><span>قبل</span></div>
-      <div class="case-side"><img src="${c.after}" alt="بعد - ${c.title}"><span>بعد</span></div>
-    </div>
+    <div class="case-image"><img src="${c.image}" alt="رسم توضيحي - ${c.title}"></div>
     <div class="case-body">
       <h3>${c.title}</h3>
       <p>${c.desc}</p>
