@@ -10,34 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <style>
-    /* تنسيق خاص لحالات العيادة لضمان ظهور الصورة كاملة مع وصفها */
-    .case-card {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      display: flex;
-      flex-direction: column;
-      text-align: right;
-      border: 1px solid #eaeaea;
-    }
-    .case-card img {
-      width: 100%;
-      height: auto; /* تمنع قص الصورة وتظهر بكامل أبعادها */
-      max-height: 400px;
-      object-fit: contain; /* إظهار الصورة كاملة بدون اقتطاع أي جزء */
-      background-color: #f9f9f9;
-    }
-    .case-info {
-      padding: 15px;
-    }
-    .case-info h3 {
-      font-size: 1.1rem;
-      color: #2c3e50;
-      margin: 0;
-    }
-  </style>
 </head>
 <body>
 <header class="site-header">
@@ -51,7 +23,7 @@
       <a class="active" href="#home">الرئيسية</a>
       <a href="#about">عن العيادة</a>
       <a href="#services">خدماتنا</a>
-      <a href="#cases">شاهد بعض حالاتنا</a>
+      <a href="cases.html">شاهد بعض حالاتنا</a>
       <a href="#contact">تواصل معنا</a>
     </nav>
     <a class="btn btn-primary nav-appointment" href="#contact">▣ &nbsp; احجز موعد</a>
@@ -105,16 +77,6 @@
     </div>
   </section>
 
-  <section id="cases" class="section cases">
-    <div class="container">
-      <div class="section-title"><h2>شاهد بعض حالاتنا</h2><span></span></div>
-      <div id="cases-grid" class="service-grid">
-        <!-- سيتم تحميل الحالات هنا تلقائياً -->
-      </div>
-      <p class="cases-note" id="cases-status" style="text-align: center; margin-top: 20px;">جاري تحميل الحالات...</p>
-    </div>
-  </section>
-
   <section id="contact" class="contact">
     <div class="container contact-grid">
       <div class="contact-cta">
@@ -136,50 +98,6 @@
 </main>
 
 <footer>جميع الحقوق محفوظة © 2026 / عيادة كيوان لطب الأسنان</footer>
-<script src="script.js?v=20260813-cases"></script>
-
-<script>
-  // جلب البيانات مع منع التخزين المؤقت (Cache Buster) لضمان عدم اختفاء الصور عند التحديث
-  fetch('assets/cases/cases-list.txt?t=' + new Date().getTime())
-    .then(response => {
-      if (!response.ok) throw new Error("No cases found");
-      return response.text();
-    })
-    .then(data => {
-      const grid = document.getElementById('cases-grid');
-      const status = document.getElementById('cases-status');
-      const lines = data.split('\n').filter(line => line.trim() !== '');
-      
-      if (lines.length === 0) {
-        status.innerText = "لا توجد حالات منشورة حالياً.";
-        return;
-      }
-      
-      status.style.display = 'none';
-      grid.innerHTML = '';
-      
-      lines.forEach(line => {
-        // كل سطر يتكون من اسم الصورة والوصف مفصولين بـ |
-        const parts = line.split('|');
-        const fileName = parts[0] ? parts[0].trim() : '';
-        const title = parts[1] ? parts[1].trim() : 'حالة طبية';
-        
-        if (fileName) {
-          const card = document.createElement('article');
-          card.className = 'case-card';
-          card.innerHTML = `
-            <img src="assets/cases/${fileName}" alt="${title}">
-            <div class="case-info">
-              <h3>${title}</h3>
-            </div>
-          `;
-          grid.appendChild(card);
-        }
-      });
-    })
-    .catch(error => {
-      document.getElementById('cases-status').innerText = "تُعرض هنا الحالات المنشورة من لوحة الإدارة تلقائياً.";
-    });
-</script>
+<script src="script.js?v=20260813"></script>
 </body>
 </html>
