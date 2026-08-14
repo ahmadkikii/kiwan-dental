@@ -20,7 +20,10 @@
 
 <header class="site-header">
   <div class="container nav-wrap">
-    <a class="brand" href="index.html"><span><strong>عيادة كيوان</strong><small>لطب الأسنان</small></span></a>
+    <a class="brand" href="index.html">
+      <span class="brand-text"><strong>عيادة كيوان</strong> <small>لطب الأسنان</small></span>
+      <span class="tooth-logo" aria-hidden="true">♡</span>
+    </a>
     <nav class="nav">
       <a href="index.html">الرئيسية</a>
       <a href="index.html#services">خدماتنا</a>
@@ -76,7 +79,6 @@
             categorized["حالات أخرى"].push({file, title});
           }
         } else if(parts.length === 2) {
-          // متوافق مع البيانات القديمة إن وجدت
           categorized["حالات أخرى"].push({file: parts[0].trim(), title: parts[1].trim()});
         }
       });
