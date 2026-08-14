@@ -4,47 +4,106 @@
     <meta charset="UTF-8">
     <title>لوحة إدارة حالات عيادة كيوان</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
-        .case-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; align-items: center; }
-        button { cursor: pointer; padding: 5px 10px; }
+        body { font-family: system-ui, sans-serif; padding: 20px; background: #f4f7f6; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .case-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; align-items: center; }
+        .delete-btn { background: #e74c3c; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+        input, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+        button { background: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>إدارة الحالات</h2>
-        <div id="cases-list">جاري تحميل الحالات...</div>
+        <h2>لوحة إدارة الحالات</h2>
+        <label>رمز الوصول (Personal Access Token):</label>
+        <input type="password" id="token" placeholder="الصق الرمز هنا (ghp_...)">
+        
+        <h3>الحالات الحالية:</h3>
+        <div id="cases-list">جاري التحميل...</div>
+
         <hr>
-        <h2>إضافة حالة جديدة</h2>
-        <input type="text" id="title" placeholder="وصف الحالة">
-        <input type="file" id="file">
-        <button onclick="uploadCase()">رفع الحالة</button>
+        <h3>إضافة حالة جديدة:</h3>
+        <input type="text" id="newTitle" placeholder="وصف الحالة">
+        <input type="file" id="newFile">
+        <button onclick="addCase()">رفع وإضافة حالة</button>
+        <p id="status"></p>
     </div>
 
     <script>
         const repo = "ahmadkikii/kiwan-dental";
-        const token = localStorage.getItem('ghToken'); // تأكد من إدخال الرمز في المتصفح أولاً
-
+        
         async function loadCases() {
+            const token = document.getElementById('token').value = localStorage.getItem('ghToken') || '';
+            if(!token) { document.getElementById('cases-list').innerHTML = "الرجاء إدخال الرمز لتظهر الحالات"; return; }
+            localStorage.setItem('ghToken', token);
+            
             const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
+            if(!res.ok) { document.getElementById('cases-list').innerHTML = "لا توجد حالات حالياً."; return; }
             const data = await res.json();
-            const list = decodeURIComponent(escape(atob(data.content))).split('\n').filter(l => l.trim());
-            const container = document.getElementById('cases-list');
-            container.innerHTML = '';
-            list.forEach((line, index) => {
+            const content = decodeURIComponent(escape(atob(data.content)));
+            const lines = content.split('\n').filter(l => l.trim());
+            
+            const listDiv = document.getElementById('cases-list');
+            listDiv.innerHTML = '';
+            lines.forEach((line, index) => {
                 const div = document.createElement('div');
                 div.className = 'case-item';
-                div.innerHTML = `<span>${line}</span> <button onclick="deleteCase(${index})">حذف</button>`;
-                container.appendChild(div);
+                div.innerHTML = `<span>${line.split('|')[1]}</span> <button class="delete-btn" onclick="deleteCase(${index})">حذف</button>`;
+                listDiv.appendChild(div);
             });
         }
 
         async function deleteCase(index) {
-            // منطق الحذف: نقوم بقراءة الملف، مسح السطر، وإعادة رفعه
-            // (سأكمل لك تفاصيل هذا الجزء في حال وافقت على هذا الهيكل)
-            alert("تم إرسال طلب الحذف.. جاري التحديث");
+            const token = document.getElementById('token').value;
+            const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
+            const data = await res.json();
+            let lines = decodeURIComponent(escape(atob(data.content))).split('\n').filter(l => l.trim());
+            
+            lines.splice(index, 1);
+            const newContent = btoa(unescape(encodeURIComponent(lines.join('\n') + '\n')));
+            
+            await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: "Delete case", content: newContent, sha: data.sha })
+            });
+            alert("تم الحذف! سيتم تحديث الموقع.");
+            loadCases();
+        }
+
+        async function addCase() {
+            const token = document.getElementById('token').value;
+            const title = document.getElementById('newTitle').value;
+            const file = document.getElementById('newFile').files[0];
+            if(!file || !title) return alert("الرجاء اختيار صورة وكتابة وصف");
+            
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                const fileName = "case-" + Date.now() + ".jpg";
+                // رفع الصورة
+                await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: "Add case", content: reader.result.split(',')[1] })
+                });
+                // تحديث القائمة
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
+                const data = await res.json();
+                const content = res.ok ? decodeURIComponent(escape(atob(data.content))) : "";
+                const newContent = btoa(unescape(encodeURIComponent(content + `${fileName} | ${title}\n`)));
+                
+                await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: "Update list", content: newContent, sha: res.ok ? data.sha : undefined })
+                });
+                alert("تم الإضافة بنجاح!");
+                loadCases();
+            };
+            reader.readAsDataURL(file);
         }
         
+        document.getElementById('token').onchange = loadCases;
         loadCases();
     </script>
 </body>
