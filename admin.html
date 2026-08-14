@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم عيادة كيوان | Admin Panel</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: #f4f7f6; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; }
+        label { font-weight: bold; margin-top: 15px; display: block; color: #34495e; }
+        input[type="text"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccd1d9; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 5px; margin-top: 20px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #2980b9; }
+        .note { font-size: 12px; color: #7f8c8d; margin-top: 5px; }
+        #status { margin-top: 15px; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>إضافة حالة جديدة <br><small>Add New Case</small></h2>
+    
+    <label>رمز الوصول (Personal Access Token):</label>
+    <input type="password" id="githubToken" placeholder="الصق الرمز الذي يبدأ بـ ghp_ هنا...">
+    <div class="note">سيتم حفظه في متصفحك لكي لا تضطر لإدخاله كل مرة.</div>
+
+    <label>تفاصيل الحالة (Case Description):</label>
+    <input type="text" id="caseTitle" placeholder="مثال: تجميل الأسنان الأمامية...">
+
+    <label>صورة الحالة (Case Image):</label>
+    <input type="file" id="caseImage" accept="image/*">
+
+    <button onclick="uploadCase()">رفع ونشر (Publish)</button>
+
+    <div id="status"></div>
+</div>
+
+<script>
+    // استرجاع الرمز المحفوظ مسبقاً
+    document.getElementById('githubToken').value = localStorage.getItem('ghToken') || '';
+
+    async function uploadCase() {
+        const token = document.getElementById('githubToken').value;
+        const title = document.getElementById('caseTitle').value;
+        const fileInput = document.getElementById('caseImage');
+        const statusDiv = document.getElementById('status');
+
+        if (!token || !title || !fileInput.files[0]) {
+            statusDiv.style.color = "red";
+            statusDiv.innerText = "الرجاء تعبئة جميع الحقول واختيار صورة!";
+            return;
+        }
+
+        // حفظ الرمز في المتصفح
+        localStorage.setItem('ghToken', token);
+        statusDiv.style.color = "blue";
+        statusDiv.innerText = "جاري تحضير الصورة... (Processing)";
+
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = async function () {
+            const base64Content = reader.result.split(',')[1];
+            const fileName = "case-" + Date.now() + "-" + file.name.replace(/\s+/g, '-');
+            
+            // إعدادات مستودع غيت هاب (GitHub Repo Settings)
+            const repo = "ahmadkikii/kiwan-dental"; 
+            const imagePath = "assets/cases/" + fileName;
+
+            try {
+                statusDiv.innerText = "جاري رفع الصورة إلى الموقع... (Uploading)";
+                
+                // 1. رفع الصورة إلى المستودع
+                let response = await fetch(`https://api.github.com/repos/${repo}/contents/${imagePath}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Add new case image: ${title}`,
+                        content: base64Content
+                    })
+                });
+
+                if (!response.ok) throw new Error("حدث خطأ أثناء رفع الصورة. تأكد من صحة الرمز (Token).");
+
+                statusDiv.style.color = "green";
+                statusDiv.innerText = "تم النشر بنجاح! (Published Successfully) سيظهر التحديث في الموقع خلال دقائق.";
+                
+                // تنظيف الحقول بعد النجاح
+                document.getElementById('caseTitle').value = '';
+                document.getElementById('caseImage').value = '';
+
+            } catch (error) {
+                statusDiv.style.color = "red";
+                statusDiv.innerText = error.message;
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+</script>
+
+</body>
+</html>
