@@ -1,38 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>حالات عيادة كيوان</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 50px; }
-        .case-card img { width: 100%; cursor: pointer; transition: transform 0.3s; }
-        .case-card img:hover { transform: scale(1.05); }
-        /* نافذة تكبير الصورة */
-        #modal { display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
-        #modal img { max-width: 90%; max-height: 90%; border-radius: 10px; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>معرض الحالات | عيادة كيوان لطب الأسنان</title>
+  <!-- نستخدم نفس ملف التنسيق الخاص بالصفحة الرئيسية لضمان تطابق التصميم -->
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* تنسيقات إضافية خاصة بصفحة الحالات */
+    .cases-page-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 40px 0; }
+    .case-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
+    .case-card img { width: 100%; height: 300px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+    .case-card img:hover { transform: scale(1.02); }
+    
+    /* نافذة تكبير الصور (Modal) */
+    #modal { display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
+    #modal img { max-width: 90%; max-height: 80%; border: 3px solid white; border-radius: 5px; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>شاهد حالاتنا</h1>
-        <div id="cases-grid" class="cases-grid"></div>
-    </div>
-    <div id="modal" onclick="this.style.display='none'"><img src="" id="modal-img"></div>
 
-    <script>
-        fetch('assets/cases/cases-list.txt?t=' + new Date().getTime())
-        .then(res => res.text()).then(data => {
-            const grid = document.getElementById('cases-grid');
-            data.split('\n').filter(l => l.trim()).forEach(line => {
-                const [file, title] = line.split('|');
-                const card = document.createElement('div');
-                card.className = 'case-card';
-                card.innerHTML = `<img src="assets/cases/${file.trim()}" onclick="openModal(this.src)"><h3>${title}</h3>`;
-                grid.appendChild(card);
-            });
-        });
-        function openModal(src) { document.getElementById('modal-img').src = src; document.getElementById('modal').style.display = 'flex'; }
-    </script>
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-text"><strong>عيادة كيوان</strong><small>لطب الأسنان</small></span>
+    </a>
+    <nav class="nav">
+      <a href="index.html">الرئيسية</a>
+      <a href="index.html#services">خدماتنا</a>
+      <a class="active" href="cases.html">معرض الحالات</a>
+      <a href="index.html#contact">تواصل معنا</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container" style="padding: 50px 0;">
+  <div class="section-title">
+    <h2>معرض الحالات العلاجية</h2>
+    <span></span>
+  </div>
+  
+  <div id="cases-grid" class="cases-page-grid"></div>
+  
+  <p id="status" style="text-align: center; color: #666; padding: 50px;">جاري تحميل الصور...</p>
+</main>
+
+<!-- نافذة عرض الصورة المكبرة -->
+<div id="modal" onclick="this.style.display='none'">
+  <img id="modal-img" src="" alt="حالة طبية">
+</div>
+
+<footer style="text-align: center; padding: 40px; background: #03263b; color: white; margin-top: 50px;">
+  جميع الحقوق محفوظة © 2026 / عيادة كيوان لطب الأسنان
+</footer>
+
+<script>
+  // جلب البيانات من ملف الحالات
+  fetch('assets/cases/cases-list.txt?t=' + new Date().getTime())
+    .then(res => res.text())
+    .then(data => {
+      const grid = document.getElementById('cases-grid');
+      const lines = data.split('\n').filter(l => l.trim());
+      
+      if(lines.length === 0) {
+        document.getElementById('status').innerText = "لا توجد حالات معروضة حالياً.";
+        return;
+      }
+      
+      document.getElementById('status').style.display = 'none';
+      
+      lines.forEach(line => {
+        const [file, title] = line.split('|');
+        grid.innerHTML += `
+          <article class="case-card">
+            <img src="assets/cases/${file.trim()}" onclick="document.getElementById('modal-img').src=this.src; document.getElementById('modal').style.display='flex'">
+            <h3 style="margin-top:15px; color:#333;">${title ? title.trim() : 'حالة طبية'}</h3>
+          </article>`;
+      });
+    })
+    .catch(err => {
+      document.getElementById('status').innerText = "حدث خطأ في تحميل الحالات.";
+    });
+</script>
+
 </body>
 </html>
