@@ -3,117 +3,56 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#03263b">
-  <meta name="description" content="عيادة كيوان لطب الأسنان - دمشق">
   <title>عيادة كيوان لطب الأسنان</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* إضافة لمسة جمالية لزر الحالات الجديد */
-    .cases-cta { background: #f8f9fa; padding: 80px 0; text-align: center; border-bottom: 1px solid #eee; }
-    .cases-cta h2 { font-size: 2.2rem; margin-bottom: 15px; color: #03263b; }
-    .cases-cta p { font-size: 1.1rem; margin-bottom: 30px; color: #666; }
-    .btn-lg { padding: 18px 50px; font-size: 1.3rem; border-radius: 50px; text-decoration: none; display: inline-block; transition: 0.3s; }
+    .cases-cta { background: #f8f9fa; padding: 60px 0; text-align: center; }
+    .cases-slider { display: flex; overflow-x: auto; gap: 20px; padding: 20px 0; scroll-snap-type: x mandatory; }
+    .case-thumb { min-width: 250px; scroll-snap-align: start; text-align: center; }
+    .case-thumb img { width: 100%; height: 200px; object-fit: cover; border-radius: 12px; opacity: 0.7; transition: 0.3s; }
   </style>
 </head>
 <body>
 <header class="site-header">
   <div class="container nav-wrap">
-    <a class="brand" href="#home" aria-label="عيادة كيوان لطب الأسنان">
-      <span class="brand-text"><strong>عيادة كيوان</strong><small>لطب الأسنان</small></span>
-      <span class="tooth-logo" aria-hidden="true">♡</span>
-    </a>
-    <button class="menu-toggle" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+    <a class="brand" href="#home"><span><strong>عيادة كيوان</strong></span></a>
     <nav class="nav">
       <a class="active" href="#home">الرئيسية</a>
-      <a href="#about">عن العيادة</a>
       <a href="#services">خدماتنا</a>
-      <a href="cases.html">شاهد بعض حالاتنا</a>
+      <a href="cases.html">معرض الحالات</a>
       <a href="#contact">تواصل معنا</a>
     </nav>
-    <a class="btn btn-primary nav-appointment" href="#contact">▣ &nbsp; احجز موعد</a>
   </div>
 </header>
 
-<main id="home">
-  <section class="hero">
-    <div class="hero-photo"></div>
-    <div class="hero-overlay"></div>
-    <div class="container hero-content">
-      <div class="hero-copy">
-        <h1>عيادة كيوان<br><span>لطب الأسنان</span></h1>
-        <p class="hero-tag">نعتني بابتسامتك ... لأنك تستحق الأفضل</p>
-        <div class="features">
-          <div><i>✦</i><b>خبرة<br>احترافية</b></div>
-          <div><i>⚙</i><b>تعقيم<br>كامل</b></div>
-          <div><i>✧</i><b>أحدث<br>التقنيات</b></div>
-          <div><i>♙</i><b>عناية<br>شخصية</b></div>
-        </div>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#contact">▣ &nbsp; احجز موعد</a>
-          <a class="btn btn-whatsapp" href="https://wa.me/963956766617" target="_blank" rel="noopener">◉ واتساب</a>
-          <a class="btn btn-outline" href="tel:0956766617"><span class="phone-number">095 676 6617</span> &nbsp; ☎ &nbsp; اتصل بنا</a>
-        </div>
-      </div>
-    </div>
-  </section>
+<main>
+  <!-- Hero Section -->
+  <section class="hero"><div class="container hero-content"><h1>عيادة كيوان</h1><p>نعتني بابتسامتك</p></div></section>
 
-  <section id="about" class="section about">
-    <div class="container about-grid">
-      <div class="about-copy">
-        <p class="eyebrow">عن العيادة</p>
-        <h2>عناية دقيقة، وابتسامة بثقة</h2>
-        <p>في عيادة كيوان لطب الأسنان نقدم خدمات علاجية وتجميلية وفق معايير الجودة والعناية، مع الاهتمام براحة المريض ونتيجة العلاج.</p>
-        <p>هدفنا أن نمنحك تجربة صحية وجمالية تدوم، ضمن بيئة مريحة وتجهيزات حديثة.</p>
-        <a class="btn btn-dark" href="#contact">تواصل معنا</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- زر الانتقال لمعرض الحالات -->
+  <!-- Slider Section -->
   <section class="cases-cta">
     <div class="container">
       <h2>شاهد نتائجنا المتميزة</h2>
-      <p>نفتخر بمشاركة جزء من رحلة علاجات مرضانا وتجميل ابتساماتهم.</p>
-      <a class="btn btn-primary btn-lg" href="cases.html">تصفح معرض الحالات ◰</a>
-    </div>
-  </section>
-
-  <section id="services" class="section services">
-    <div class="container">
-      <div class="section-title"><h2>خدماتنا</h2><span></span></div>
-      <div class="service-grid">
-        <article class="service-card"><div class="service-icon">✦</div><h3>مداواة الأسنان<br>اللبية والترميمية</h3><img src="assets/service-4.jpg" alt=""></article>
-        <article class="service-card"><div class="service-icon">⌁</div><h3>تقويم الأسنان</h3><img src="assets/service-3.jpg" alt=""></article>
-        <article class="service-card"><div class="service-icon">✚</div><h3>زرع الأسنان</h3><img src="assets/service-2.jpg" alt=""></article>
-        <article class="service-card"><div class="service-icon">♡</div><h3>تجميل الأسنان</h3><img src="assets/service-1.jpg" alt=""></article>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact" class="contact">
-    <div class="container contact-grid">
-      <div class="contact-cta">
-        <h2>تواصل معنا / احجز موعدك الآن</h2>
-        <p>نحن هنا لخدمتك والرد على جميع استفساراتك.</p>
-        <div class="contact-buttons">
-          <a class="btn btn-whatsapp" href="https://wa.me/963956766617" target="_blank" rel="noopener">◉ واتساب</a>
-          <a class="btn btn-outline-light" href="tel:0956766617"><span class="phone-number">095 676 6617</span> &nbsp; ☎</a>
-          <a class="btn btn-outline-light" href="tel:0112311425"><span class="phone-number">011 231 1425</span> &nbsp; ☎</a>
-        </div>
-      </div>
-      <div class="contact-info">
-        <div class="info-row"><span class="info-icon">⌖</span><div><strong>العنوان</strong><a class="location-link" href="https://maps.app.goo.gl/LBmP9zxNT2rYELF67" target="_blank" rel="noopener"><span>دمشق - بحصة - مقابل فندق فينيسيا<br>جانب صيدلية فاديا عكة - طابق أول</span><b>📍 موقع العيادة على الخريطة</b></a></div></div>
-        <div class="info-row"><span class="info-icon">◷</span><div><strong>ساعات العمل</strong><p>يومياً من 9:00 صباحاً - 8:00 مساءً</p></div></div>
-      </div>
-      <div class="contact-photo"><img src="assets/clinic-room.jpg" alt="غرفة العلاج في عيادة كيوان"></div>
+      <div id="index-cases-slider" class="cases-slider"></div>
+      <div style="margin-top: 30px;"><a class="btn btn-primary" href="cases.html">تصفح كامل المعرض ◰</a></div>
     </div>
   </section>
 </main>
 
-<footer>جميع الحقوق محفوظة © 2026 / عيادة كيوان لطب الأسنان</footer>
-<script src="script.js?v=20260813"></script>
+<script>
+  fetch('assets/cases/cases-list.txt?t=' + Date.now())
+    .then(res => res.text()).then(data => {
+      const slider = document.getElementById('index-cases-slider');
+      const lines = data.split('\n').filter(l => l.trim());
+      lines.forEach(line => {
+        const [file, title] = line.split('|');
+        slider.innerHTML += `
+          <div class="case-thumb">
+            <img src="assets/cases/${file.trim()}">
+            <p style="margin-top:8px; font-size:0.9rem;">${title ? title.trim() : 'حالة طبية'}</p>
+          </div>`;
+      });
+    });
+</script>
 </body>
 </html>
