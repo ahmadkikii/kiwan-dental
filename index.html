@@ -80,8 +80,10 @@
   <section id="cases" class="section cases">
     <div class="container">
       <div class="section-title"><h2>شاهد بعض حالاتنا</h2><span></span></div>
-      <div id="cases-grid" class="cases-grid"></div>
-      <p class="cases-note">تُعرض هنا الحالات المنشورة من لوحة الإدارة تلقائياً.</p>
+      <div id="cases-grid" class="cases-grid">
+        <!-- سي يتم تحميل الحالات هنا تلقائياً -->
+      </div>
+      <p class="cases-note" id="cases-status">جاري تحميل الحالات...</p>
     </div>
   </section>
 
@@ -107,5 +109,37 @@
 
 <footer>جميع الحقوق محفوظة © 2026 / عيادة كيوان لطب الأسنان</footer>
 <script src="script.js?v=20260813-cases"></script>
+
+<script>
+  // جلب الصور وعرضها تلقائياً في قسم الحالات
+  fetch('assets/cases/cases-list.txt?' + new Date().getTime())
+    .then(response => {
+      if (!response.ok) throw new Error("No cases found");
+      return response.text();
+    })
+    .then(data => {
+      const grid = document.getElementById('cases-grid');
+      const status = document.getElementById('cases-status');
+      const files = data.split('\n').filter(line => line.trim() !== '');
+      
+      if (files.length === 0) {
+        status.innerText = "لا توجد حالات منشورة حالياً.";
+        return;
+      }
+      
+      status.style.display = 'none';
+      grid.innerHTML = '';
+      
+      files.forEach(file => {
+        const card = document.createElement('article');
+        card.className = 'service-card'; // نستخدم نفس تنسيق بطاقات الخدمات لتكون متناسقة
+        card.innerHTML = `<img src="assets/cases/${file.trim()}" alt="حالة من عيادة كيوان" style="width:100%; border-radius:8px; object-fit: cover; height: 250px;">`;
+        grid.appendChild(card);
+      });
+    })
+    .catch(error => {
+      document.getElementById('cases-status').innerText = "تُعرض هنا الحالات المنشورة من لوحة الإدارة تلقائياً.";
+    });
+</script>
 </body>
 </html>
