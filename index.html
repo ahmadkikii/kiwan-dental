@@ -11,56 +11,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* تنسيقات قسم الحالات المحدث (سلايدر أفقي + Faded) */
     .cases-cta { background: #f8f9fa; padding: 60px 0; text-align: center; border-bottom: 1px solid #eee; }
     .cases-cta h2 { font-size: 2.2rem; margin-bottom: 15px; color: #03263b; }
     .cases-cta p { font-size: 1.1rem; margin-bottom: 20px; color: #666; }
-    
-    .cases-slider {
-      display: flex;
-      overflow-x: auto;
-      gap: 20px;
-      padding: 20px 10px;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: thin;
-    }
-    .cases-slider::-webkit-scrollbar {
-      height: 8px;
-    }
-    .cases-slider::-webkit-scrollbar-thumb {
-      background: #ccc;
-      border-radius: 4px;
-    }
-    .case-thumb-card {
-      min-width: 240px;
-      max-width: 240px;
-      scroll-snap-align: start;
-      background: #fff;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-      text-align: center;
-    }
-    .case-thumb-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 8px;
-      opacity: 0.7; /* تأثير الـ faded المطلوب */
-      transition: 0.3s;
-    }
-    .case-thumb-card img:hover {
-      opacity: 1; /* تصبح واضحة عند مرور الماوس أو اللمس */
-    }
-    .case-thumb-card p {
-      margin-top: 10px;
-      font-size: 0.95rem;
-      color: #333;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .cases-slider { display: flex; overflow-x: auto; gap: 20px; padding: 20px 10px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+    .cases-slider::-webkit-scrollbar { height: 8px; }
+    .cases-slider::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+    .case-thumb-card { min-width: 240px; max-width: 240px; scroll-snap-align: start; background: #fff; padding: 10px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
+    .case-thumb-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; opacity: 0.7; transition: 0.3s; }
+    .case-thumb-card img:hover { opacity: 1; }
+    .case-thumb-card p { margin-top: 10px; font-size: 0.95rem; color: #333; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .btn-lg { padding: 15px 40px; font-size: 1.2rem; border-radius: 50px; text-decoration: none; display: inline-block; transition: 0.3s; }
   </style>
 </head>
@@ -124,7 +84,6 @@
       <h2>شاهد نتائجنا المتميزة</h2>
       <p>نفتخر بمشاركة جزء من رحلة علاجات مرضانا وتجميل ابتساماتهم.</p>
       
-      <!-- منطقة السلايدر -->
       <div id="index-cases-slider" class="cases-slider">
         <p style="width: 100%; text-align: center; color: #888;">جاري تحميل الحالات...</p>
       </div>
@@ -170,7 +129,6 @@
 <footer>جميع الحقوق محفوظة © 2026 / عيادة كيوان لطب الأسنان</footer>
 <script src="script.js?v=20260813"></script>
 <script>
-  // كود جلب الحالات وعرضها بشكل أفقي في الصفحة الرئيسية
   fetch('assets/cases/cases-list.txt?t=' + new Date().getTime())
     .then(res => res.text())
     .then(data => {
@@ -184,11 +142,14 @@
       
       slider.innerHTML = '';
       lines.forEach(line => {
-        const [file, title] = line.split('|');
+        const parts = line.split('|');
+        const file = parts[0].trim();
+        const title = parts[2] ? parts[2].trim() : (parts[1] ? parts[1].trim() : 'حالة طبية');
+        
         slider.innerHTML += `
           <div class="case-thumb-card">
-            <img src="assets/cases/${file.trim()}" alt="حالة طبية">
-            <p>${title ? title.trim() : 'حالة طبية'}</p>
+            <img src="assets/cases/${file}" alt="حالة طبية">
+            <p>${title}</p>
           </div>`;
       });
     })
