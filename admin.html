@@ -25,8 +25,8 @@
     <input type="password" id="githubToken" placeholder="الصق الرمز الذي يبدأ بـ ghp_ هنا...">
     <div class="note">سيتم حفظه في متصفحك لكي لا تضطر لإدخاله كل مرة.</div>
 
-    <label>عنوان أو وصف الحالة:</label>
-    <input type="text" id="caseTitle" placeholder="مثال: تجميل الأسنان الأمامية...">
+    <label>وصف الحالة (مثلاً: تجميل الأسنان الأمامية):</label>
+    <input type="text" id="caseTitle" placeholder="اكتب وصف الحالة هنا...">
 
     <label>صورة الحالة (Case Image):</label>
     <input type="file" id="caseImage" accept="image/*">
@@ -45,9 +45,9 @@
         const fileInput = document.getElementById('caseImage');
         const statusDiv = document.getElementById('status');
 
-        if (!token || !fileInput.files[0]) {
+        if (!token || !title || !fileInput.files[0]) {
             statusDiv.style.color = "red";
-            statusDiv.innerText = "الرجاء إدخال الرمز واختيار صورة على الأقل!";
+            statusDiv.innerText = "الرجاء تعبئة الوصف واختيار صورة!";
             return;
         }
 
@@ -73,9 +73,9 @@
                     body: JSON.stringify({ message: `Add case image: ${title}`, content: base64Content })
                 });
 
-                if (!imgResponse.ok) throw new Error("فشل رفع الصورة. تحقق من صحة الرمز (Token).");
+                if (!imgResponse.ok) throw new Error("فشل رفع الصورة. تحقق من صحة الرمز.");
 
-                // 2. جلب ملف الأسماء القديم (إن وجد) لإضافة اسم الصورة الجديدة إليه
+                // 2. جلب ملف القائمة القديم
                 let listSha = "";
                 let existingContent = "";
                 let listResponse = await fetch(`https://api.github.com/repos/${repo}/contents/${listPath}`, {
@@ -88,26 +88,26 @@
                     existingContent = decodeURIComponent(escape(atob(listData.content)));
                 }
 
-                // إضافة اسم الصورة الجديدة للسطر التالي
-                const updatedContent = existingContent + fileName + "\n";
+                // ربط اسم الصورة مع الوصف باستخدام الرمز |
+                const newEntry = `${fileName} | ${title}`;
+                const updatedContent = existingContent + newEntry + "\n";
                 const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
 
                 // 3. تحديث ملف القائمة على غيت هاب
-                let updateListOptions = {
+                let updateListRes = await fetch(`https://api.github.com/repos/${repo}/contents/${listPath}`, {
                     method: 'PUT',
                     headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        message: `Update cases list with ${fileName}`,
+                        message: `Update cases list with: ${title}`,
                         content: encodedContent,
                         sha: listSha ? listSha : undefined
                     })
-                };
+                });
 
-                let updateListRes = await fetch(`https://api.github.com/repos/${repo}/contents/${listPath}`, updateListOptions);
-                if (!updateListRes.ok) throw new Error("تم رفع الصورة ولكن حدث خطأ في تحديث قائمة الموقع.");
+                if (!updateListRes.ok) throw new Error("تم رفع الصورة ولكن فشل تحديث القائمة.");
 
                 statusDiv.style.color = "green";
-                statusDiv.innerText = "تم النشر بنجاح! ستظهر الحالة في الموقع خلال دقيقة واحدة.";
+                statusDiv.innerText = "تم النشر بنجاح! ستظهر الصورة بكامل حجمها مع الوصف خلال دقيقة.";
                 
                 document.getElementById('caseTitle').value = '';
                 document.getElementById('caseImage').value = '';
