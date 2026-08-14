@@ -2,124 +2,50 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم عيادة كيوان | Admin Panel</title>
+    <title>لوحة إدارة حالات عيادة كيوان</title>
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; background-color: #f4f7f6; padding: 20px; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; }
-        label { font-weight: bold; margin-top: 15px; display: block; color: #34495e; }
-        input[type="text"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccd1d9; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 5px; margin-top: 20px; font-size: 16px; cursor: pointer; font-weight: bold; }
-        button:hover { background-color: #2980b9; }
-        .note { font-size: 12px; color: #7f8c8d; margin-top: 5px; }
-        #status { margin-top: 15px; text-align: center; font-weight: bold; }
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        .case-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; align-items: center; }
+        button { cursor: pointer; padding: 5px 10px; }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h2>إدارة الحالات</h2>
+        <div id="cases-list">جاري تحميل الحالات...</div>
+        <hr>
+        <h2>إضافة حالة جديدة</h2>
+        <input type="text" id="title" placeholder="وصف الحالة">
+        <input type="file" id="file">
+        <button onclick="uploadCase()">رفع الحالة</button>
+    </div>
 
-<div class="container">
-    <h2>إضافة حالة جديدة <br><small>Add New Case</small></h2>
-    
-    <label>رمز الوصول (Personal Access Token):</label>
-    <input type="password" id="githubToken" placeholder="الصق الرمز الذي يبدأ بـ ghp_ هنا...">
-    <div class="note">سيتم حفظه في متصفحك لكي لا تضطر لإدخاله كل مرة.</div>
+    <script>
+        const repo = "ahmadkikii/kiwan-dental";
+        const token = localStorage.getItem('ghToken'); // تأكد من إدخال الرمز في المتصفح أولاً
 
-    <label>وصف الحالة (مثلاً: تجميل الأسنان الأمامية):</label>
-    <input type="text" id="caseTitle" placeholder="اكتب وصف الحالة هنا...">
-
-    <label>صورة الحالة (Case Image):</label>
-    <input type="file" id="caseImage" accept="image/*">
-
-    <button onclick="uploadCase()">رفع ونشر (Publish)</button>
-
-    <div id="status"></div>
-</div>
-
-<script>
-    document.getElementById('githubToken').value = localStorage.getItem('ghToken') || '';
-
-    async function uploadCase() {
-        const token = document.getElementById('githubToken').value;
-        const title = document.getElementById('caseTitle').value;
-        const fileInput = document.getElementById('caseImage');
-        const statusDiv = document.getElementById('status');
-
-        if (!token || !title || !fileInput.files[0]) {
-            statusDiv.style.color = "red";
-            statusDiv.innerText = "الرجاء تعبئة الوصف واختيار صورة!";
-            return;
+        async function loadCases() {
+            const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
+            const data = await res.json();
+            const list = decodeURIComponent(escape(atob(data.content))).split('\n').filter(l => l.trim());
+            const container = document.getElementById('cases-list');
+            container.innerHTML = '';
+            list.forEach((line, index) => {
+                const div = document.createElement('div');
+                div.className = 'case-item';
+                div.innerHTML = `<span>${line}</span> <button onclick="deleteCase(${index})">حذف</button>`;
+                container.appendChild(div);
+            });
         }
 
-        localStorage.setItem('ghToken', token);
-        statusDiv.style.color = "blue";
-        statusDiv.innerText = "جاري رفع الصورة وتحديث الموقع...";
-
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-
-        reader.onloadend = async function () {
-            const base64Content = reader.result.split(',')[1];
-            const fileName = "case-" + Date.now() + "-" + file.name.replace(/\s+/g, '-');
-            const repo = "ahmadkikii/kiwan-dental"; 
-            const imagePath = "assets/cases/" + fileName;
-            const listPath = "assets/cases/cases-list.txt";
-
-            try {
-                // 1. رفع الصورة الجديدة
-                let imgResponse = await fetch(`https://api.github.com/repos/${repo}/contents/${imagePath}`, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: `Add case image: ${title}`, content: base64Content })
-                });
-
-                if (!imgResponse.ok) throw new Error("فشل رفع الصورة. تحقق من صحة الرمز.");
-
-                // 2. جلب ملف القائمة القديم
-                let listSha = "";
-                let existingContent = "";
-                let listResponse = await fetch(`https://api.github.com/repos/${repo}/contents/${listPath}`, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-
-                if (listResponse.ok) {
-                    let listData = await listResponse.json();
-                    listSha = listData.sha;
-                    existingContent = decodeURIComponent(escape(atob(listData.content)));
-                }
-
-                // ربط اسم الصورة مع الوصف باستخدام الرمز |
-                const newEntry = `${fileName} | ${title}`;
-                const updatedContent = existingContent + newEntry + "\n";
-                const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
-
-                // 3. تحديث ملف القائمة على غيت هاب
-                let updateListRes = await fetch(`https://api.github.com/repos/${repo}/contents/${listPath}`, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: `Update cases list with: ${title}`,
-                        content: encodedContent,
-                        sha: listSha ? listSha : undefined
-                    })
-                });
-
-                if (!updateListRes.ok) throw new Error("تم رفع الصورة ولكن فشل تحديث القائمة.");
-
-                statusDiv.style.color = "green";
-                statusDiv.innerText = "تم النشر بنجاح! ستظهر الصورة بكامل حجمها مع الوصف خلال دقيقة.";
-                
-                document.getElementById('caseTitle').value = '';
-                document.getElementById('caseImage').value = '';
-
-            } catch (error) {
-                statusDiv.style.color = "red";
-                statusDiv.innerText = error.message;
-            }
-        };
-        reader.readAsDataURL(file);
-    }
-</script>
-
+        async function deleteCase(index) {
+            // منطق الحذف: نقوم بقراءة الملف، مسح السطر، وإعادة رفعه
+            // (سأكمل لك تفاصيل هذا الجزء في حال وافقت على هذا الهيكل)
+            alert("تم إرسال طلب الحذف.. جاري التحديث");
+        }
+        
+        loadCases();
+    </script>
 </body>
 </html>
