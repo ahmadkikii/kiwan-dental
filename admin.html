@@ -2,28 +2,47 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة إدارة حالات عيادة كيوان</title>
     <style>
-        body { font-family: system-ui, sans-serif; padding: 20px; background: #f4f7f6; }
-        .container { max-width: 700px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .case-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; align-items: center; }
-        .delete-btn { background: #e74c3c; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
-        input, select, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { background: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; }
+        body { font-family: system-ui, sans-serif; padding: 20px; background: #f4f7f6; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2, h3 { color: #03263b; }
+        .case-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; align-items: center; gap: 10px; }
+        .case-info { flex-grow: 1; font-size: 0.95rem; }
+        .case-info span { display: inline-block; background: #eef2f5; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; margin-left: 5px; color: #3498db; font-weight: bold; }
+        .btn-group { display: flex; gap: 5px; }
+        .delete-btn { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .edit-btn { background: #f39c12; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        input, select, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; font-family: inherit; }
+        .primary-btn { background: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; font-size: 1rem; }
+        .primary-btn:hover { background: #2980b9; }
+        hr { margin: 30px 0; border: 0; border-top: 1px solid #eee; }
+        .loading { text-align: center; color: #666; padding: 20px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>لوحة إدارة الحالات</h2>
-        <label>رمز الوصول (Personal Access Token):</label>
-        <input type="password" id="token" placeholder="الصق الرمز هنا (ghp_...)">
+        <h2>لوحة إدارة الحالات الطبية</h2>
         
-        <h3>الحالات الحالية:</h3>
-        <div id="cases-list">جاري التحميل...</div>
+        <div style="margin-bottom: 20px;">
+            <label>رمز الوصول الشخصي (GitHub Personal Access Token):</label>
+            <input type="password" id="token" placeholder="الصق الرمز هنا (ghp_...)">
+        </div>
+        
+        <h3>الحالات الحالية المرفوعة:</h3>
+        <div id="cases-list" class="loading">الرجاء إدخال الرمز لتظهر الحالات...</div>
 
         <hr>
-        <h3>إضافة حالة جديدة:</h3>
-        <input type="text" id="newTitle" placeholder="وصف الحالة (مثال: علاج جذور لطفل...">
+
+        <h3 id="form-title">إضافة حالة جديدة:</h3>
+        <input type="hidden" id="editIndex" value="-1">
+        <input type="hidden" id="editFileName" value="">
+        <input type="hidden" id="editFileSha" value="">
+
+        <input type="text" id="newTitle" placeholder="وصف الحالة (مثال: علاج جذور وترقيم سفلي...)">
+        
+        <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">اختر القسم:</label>
         <select id="newCategory">
             <option value="المداواة اللبية">المداواة اللبية</option>
             <option value="المداواة الترميمية">المداواة الترميمية</option>
@@ -32,8 +51,12 @@
             <option value="تقويم الأسنان">تقويم الأسنان</option>
             <option value="حالات أخرى">حالات أخرى</option>
         </select>
+        
+        <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">صورة الحالة:</label>
         <input type="file" id="newFile">
-        <button onclick="addCase()">رفع وإضافة حالة</button>
+        
+        <button class="primary-btn" id="save-btn" onclick="saveCase()">رفع وإضافة الحالة</button>
+        <button id="cancel-edit-btn" style="display:none; background:#95a5a6; color:white; border:none; cursor:pointer;" onclick="resetForm()">إلغاء التعديل</button>
     </div>
 
     <script>
@@ -41,81 +64,198 @@
         
         async function loadCases() {
             const token = document.getElementById('token').value = localStorage.getItem('ghToken') || '';
-            if(!token) { document.getElementById('cases-list').innerHTML = "الرجاء إدخال الرمز لتظهر الحالات"; return; }
+            if(!token) { document.getElementById('cases-list').innerHTML = "الرجاء إدخال الرمز في الأعلى لتظهر الحالات."; return; }
             localStorage.setItem('ghToken', token);
             
-            const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
-            if(!res.ok) { document.getElementById('cases-list').innerHTML = "لا توجد حالات حالياً."; return; }
-            const data = await res.json();
-            const content = decodeURIComponent(escape(atob(data.content)));
-            const lines = content.split('\n').filter(l => l.trim());
-            
-            const listDiv = document.getElementById('cases-list');
-            listDiv.innerHTML = '';
-            lines.forEach((line, index) => {
-                const parts = line.split('|');
-                const title = parts[2] ? parts[2].trim() : parts[1].trim();
-                const cat = parts[2] ? `[${parts[1].trim()}]` : '';
-                const div = document.createElement('div');
-                div.className = 'case-item';
-                div.innerHTML = `<span>${cat} ${title}</span> <button class="delete-btn" onclick="deleteCase(${index})">حذف</button>`;
-                listDiv.appendChild(div);
-            });
-        }
-
-        async function deleteCase(index) {
-            const token = document.getElementById('token').value;
-            const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
-            const data = await res.json();
-            let lines = decodeURIComponent(escape(atob(data.content))).split('\n').filter(l => l.trim());
-            
-            lines.splice(index, 1);
-            const newContent = btoa(unescape(encodeURIComponent(lines.join('\n') + '\n')));
-            
-            await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, {
-                method: 'PUT',
-                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: "Delete case", content: newContent, sha: data.sha })
-            });
-            alert("تم الحذف بنجاح!");
-            loadCases();
-        }
-
-        async function addCase() {
-            const token = document.getElementById('token').value;
-            const title = document.getElementById('newTitle').value;
-            const category = document.getElementById('newCategory').value;
-            const file = document.getElementById('newFile').files[0];
-            if(!file || !title) return alert("الرجاء اختيار صورة وكتابة وصف الحالة");
-            
-            const reader = new FileReader();
-            reader.onloadend = async () => {
-                const fileName = "case-" + Date.now() + ".jpg";
-                // رفع الصورة
-                await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: "Add case image", content: reader.result.split(',')[1] })
-                });
-                
-                // جلب القائمة القديمة
+            try {
                 const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
-                const data = res.ok ? await res.json() : null;
-                const content = data ? decodeURIComponent(escape(atob(data.content))) : "";
+                if(!res.ok) { document.getElementById('cases-list').innerHTML = "لا توجد حالات حالياً أو ملف القائمة غير موجود."; return; }
+                const data = await res.json();
+                const content = decodeURIComponent(escape(atob(data.content)));
+                const lines = content.split('\n').filter(l => l.trim());
                 
-                // إضافة السطر الجديد بالنسق: file.jpg | القسم | الوصف
-                const newEntry = `${fileName} | ${category} | ${title}\n`;
-                const newContent = btoa(unescape(encodeURIComponent(content + newEntry)));
+                const listDiv = document.getElementById('cases-list');
+                if(lines.length === 0) {
+                    listDiv.innerHTML = "لا توجد حالات مسجلة حالياً.";
+                    return;
+                }
+                
+                listDiv.innerHTML = '';
+                lines.forEach((line, index) => {
+                    const parts = line.split('|');
+                    const file = parts[0].trim();
+                    const cat = parts[1] ? parts[1].trim() : 'حالات أخرى';
+                    const title = parts[2] ? parts[2].trim() : (parts[1] ? parts[1].trim() : 'بدون عنوان');
+                    
+                    const div = document.createElement('div');
+                    div.className = 'case-item';
+                    div.innerHTML = `
+                        <div class="case-info">
+                            <span>${cat}</span> <strong>${title}</strong><br>
+                            <small style="color:#888;">الملف: ${file}</small>
+                        </div>
+                        <div class="btn-group">
+                            <button class="edit-btn" onclick="startEdit(${index}, '${file}', '${cat}', '${title}')">تعديل</button>
+                            <button class="delete-btn" onclick="deleteCase(${index}, '${file}')">حذف نهائي</button>
+                        </div>`;
+                    listDiv.appendChild(div);
+                });
+            } catch(e) {
+                document.getElementById('cases-list').innerHTML = "حدث خطأ أثناء جلب الحالات. تأكد من صحة الرمز.";
+            }
+        }
+
+        // تحضير واجهة التعديل
+        function startEdit(index, file, cat, title) {
+            document.getElementById('editIndex').value = index;
+            document.getElementById('editFileName').value = file;
+            document.getElementById('newTitle').value = title;
+            document.getElementById('newCategory').value = cat;
+            document.getElementById('form-title').innerText = "تعديل الحالة المحددة:";
+            document.getElementById('save-btn').innerText = "حفظ التعديلات";
+            document.getElementById('cancel-edit-btn').style.display = "block";
+            window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+        }
+
+        function resetForm() {
+            document.getElementById('editIndex').value = "-1";
+            document.getElementById('editFileName').value = "";
+            document.getElementById('newTitle').value = "";
+            document.getElementById('newFile').value = "";
+            document.getElementById('form-title').innerText = "إضافة حالة جديدة:";
+            document.getElementById('save-btn').innerText = "رفع وإضافة الحالة";
+            document.getElementById('cancel-edit-btn').style.display = "none";
+        }
+
+        // حذف الحالة مع حذف ملف الصورة من سيرفر غيت هب فعلياً
+        async function deleteCase(index, fileName) {
+            if(!confirm("هل أنت متأكد من الحذف النهائي؟ سيتم حذف الصورة من الموقع ومن مجلد المستودع.")) return;
+            const token = document.getElementById('token').value;
+            
+            try {
+                // 1. حذف ملف الصورة من مجلد cases
+                const imgRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`, { headers: { 'Authorization': `token ${token}` }});
+                if(imgRes.ok) {
+                    const imgData = await imgRes.json();
+                    await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: "Delete case image file", sha: imgData.sha })
+                    });
+                }
+
+                // 2. تحديث ملف القائمة cases-list.txt وإزالة السطر
+                const listRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
+                const listData = await listRes.json();
+                let lines = decodeURIComponent(escape(atob(listData.content))).split('\n').filter(l => l.trim());
+                
+                lines.splice(index, 1);
+                const newContent = btoa(unescape(encodeURIComponent(lines.join('\n') + (lines.length > 0 ? '\n' : ''))));
                 
                 await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, {
                     method: 'PUT',
                     headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: "Update cases list", content: newContent, sha: data ? data.sha : undefined })
+                    body: JSON.stringify({ message: "Remove case from list", content: newContent, sha: listData.sha })
                 });
-                alert("تم رفع الإضافة بنجاح!");
+                
+                alert("تم حذف الحالة والصورة نهائياً بنجاح!");
                 loadCases();
-            };
-            reader.readAsDataURL(file);
+            } catch(e) {
+                alert("حدث خطأ أثناء محاولة الحذف.");
+            }
+        }
+
+        // إضافة أو تعديل الحالة
+        async function saveCase() {
+            const token = document.getElementById('token').value;
+            const title = document.getElementById('newTitle').value;
+            const category = document.getElementById('newCategory').value;
+            const fileInput = document.getElementById('newFile');
+            const editIndex = parseInt(document.getElementById('editIndex').value);
+            
+            if(!title) return alert("الرجاء كتابة وصف الحالة.");
+            
+            const listRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
+            const listData = listRes.ok ? await listRes.json() : null;
+            let lines = listData ? decodeURIComponent(escape(atob(listData.content))).split('\n').filter(l => l.trim()) : [];
+
+            if(editIndex > -1) {
+                // عملية تعديل حالة موجودة
+                let oldFileName = document.getElementById('editFileName').value;
+                
+                if(fileInput.files[0]) {
+                    // إذا تم اختيار صورة جديدة للاستبدال
+                    const file = fileInput.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = async () => {
+                        const newFileName = "case-" + Date.now() + ".jpg";
+                        
+                        // 1. رفع الصورة الجديدة
+                        await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${newFileName}`, {
+                            method: 'PUT',
+                            headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ message: "Upload replacement case image", content: reader.result.split(',')[1] })
+                        });
+                        
+                        // 2. حذف الصورة القديمة
+                        try {
+                            const oldImgRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${oldFileName}`, { headers: { 'Authorization': `token ${token}` }});
+                            if(oldImgRes.ok) {
+                                const oldImgData = await oldImgRes.json();
+                                await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${oldFileName}`, {
+                                    method: 'DELETE',
+                                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ message: "Delete old case image", sha: oldImgData.sha })
+                                });
+                            }
+                        } catch(e) {}
+                        
+                        // 3. تحديث السطر في القائمة
+                        lines[editIndex] = `${newFileName} | ${category} | ${title}`;
+                        await updateCasesFile(token, lines, listData ? listData.sha : null);
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    // تعديل الوصف أو القسم فقط بدون تغيير الصورة
+                    lines[editIndex] = `${oldFileName} | ${category} | ${title}`;
+                    await updateCasesFile(token, lines, listData ? listData.sha : null);
+                }
+            } else {
+                // عملية إضافة حالة جديدة
+                if(!fileInput.files[0]) return alert("الرجاء اختيار صورة للحالة الجديدة.");
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    const fileName = "case-" + Date.now() + ".jpg";
+                    
+                    // رفع الصورة الجديدة
+                    await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: "Add new case image", content: reader.result.split(',')[1] })
+                    });
+                    
+                    // إضافة السطر للقائمة
+                    lines.push(`${fileName} | ${category} | ${title}`);
+                    await updateCasesFile(token, lines, listData ? listData.sha : null);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function updateCasesFile(token, lines, sha) {
+            const newContent = btoa(unescape(encodeURIComponent(lines.join('\n') + '\n')));
+            const bodyData = { message: "Update cases list via admin", content: newContent };
+            if(sha) bodyData.sha = sha;
+            
+            await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(bodyData)
+            });
+            alert("تم حفظ التعديلات بنجاح!");
+            resetForm();
+            loadCases();
         }
         
         document.getElementById('token').onchange = loadCases;
