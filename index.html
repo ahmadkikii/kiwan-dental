@@ -140,6 +140,9 @@
         return;
       }
       
+      // عكس الترتيب لتظهر الحالات من الأحدث إلى الأقدم
+      lines.reverse();
+
       slider.innerHTML = '';
       lines.forEach(line => {
         const parts = line.split('|');
