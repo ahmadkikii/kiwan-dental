@@ -20,6 +20,7 @@
         input, select, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; font-family: inherit; }
         .primary-btn { background: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; font-size: 1rem; }
         .primary-btn:hover { background: #2980b9; }
+        .token-box { background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #e1e8ed; text-align: center; }
         hr { margin: 30px 0; border: 0; border-top: 1px solid #eee; }
         .loading { text-align: center; color: #666; padding: 20px; }
     </style>
@@ -28,42 +29,81 @@
     <div class="container">
         <h2>لوحة إدارة الحالات الطبية</h2>
         
-        <div style="margin-bottom: 20px;">
-            <label>رمز الوصول الشخصي (GitHub Personal Access Token):</label>
+        <!-- قسم تسجيل الدخول بالتوكن -->
+        <div id="auth-section" class="token-box">
+            <h3>تسجيل الدخول للوحة الإدارة</h3>
+            <p style="color: #666; font-size: 0.9rem;">الرجاء إدخال رمز الوصول الشخصي (GitHub Personal Access Token) للمتابعة:</p>
             <input type="password" id="token" placeholder="الصق الرمز هنا (ghp_...)">
+            <button class="primary-btn" onclick="loginAndLoad()">دخول وإدارة الحالات</button>
         </div>
-        
-        <h3>الحالات الحالية المرفوعة:</h3>
-        <div id="cases-list" class="loading">الرجاء إدخال الرمز لتظهر الحالات...</div>
 
-        <hr>
+        <!-- المحتوى المخفي حتى يتم تسجيل الدخول -->
+        <div id="admin-content" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #eef2f5; padding: 10px 15px; border-radius: 6px; margin-bottom: 20px;">
+                <span style="color: #27ae60; font-weight: bold;">✓ متصل بالمستودع بنجاح</span>
+                <button onclick="logout()" style="width: auto; margin: 0; background: #7f8c8d; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">تسجيل الخروج / تغيير الرمز</button>
+            </div>
 
-        <h3 id="form-title">إضافة حالة جديدة:</h3>
-        <input type="hidden" id="editIndex" value="-1">
-        <input type="hidden" id="editFileName" value="">
-        <input type="hidden" id="editFileSha" value="">
+            <h3>الحالات الحالية المرفوعة:</h3>
+            <div id="cases-list" class="loading">جاري جلب الحالات...</div>
 
-        <input type="text" id="newTitle" placeholder="وصف الحالة (مثال: علاج جذور وترقيم سفلي...)">
-        
-        <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">اختر القسم:</label>
-        <select id="newCategory">
-            <option value="المداواة اللبية">المداواة اللبية</option>
-            <option value="المداواة الترميمية">المداواة الترميمية</option>
-            <option value="تجميل الأسنان">تجميل الأسنان</option>
-            <option value="زرع الأسنان">زرع الأسنان</option>
-            <option value="تقويم الأسنان">تقويم الأسنان</option>
-            <option value="حالات أخرى">حالات أخرى</option>
-        </select>
-        
-        <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">صورة الحالة:</label>
-        <input type="file" id="newFile">
-        
-        <button class="primary-btn" id="save-btn" onclick="saveCase()">رفع وإضافة الحالة</button>
-        <button id="cancel-edit-btn" style="display:none; background:#95a5a6; color:white; border:none; cursor:pointer;" onclick="resetForm()">إلغاء التعديل</button>
+            <hr>
+
+            <h3 id="form-title">إضافة حالة جديدة:</h3>
+            <input type="hidden" id="editIndex" value="-1">
+            <input type="hidden" id="editFileName" value="">
+            <input type="hidden" id="editFileSha" value="">
+
+            <input type="text" id="newTitle" placeholder="وصف الحالة (مثال: علاج جذور وترقيم سفلي...)">
+            
+            <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">اختر القسم:</label>
+            <select id="newCategory">
+                <option value="المداواة اللبية">المداواة اللبية</option>
+                <option value="المداواة الترميمية">المداواة الترميمية</option>
+                <option value="تجميل الأسنان">تجميل الأسنان</option>
+                <option value="زرع الأسنان">زرع الأسنان</option>
+                <option value="تقويم الأسنان">تقويم الأسنان</option>
+                <option value="حالات أخرى">حالات أخرى</option>
+            </select>
+            
+            <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">صورة الحالة:</label>
+            <input type="file" id="newFile">
+            
+            <button class="primary-btn" id="save-btn" onclick="saveCase()">رفع وإضافة الحالة</button>
+            <button id="cancel-edit-btn" style="display:none; background:#95a5a6; color:white; border:none; cursor:pointer;" onclick="resetForm()">إلغاء التعديل</button>
+        </div>
     </div>
 
     <script>
         const repo = "ahmadkikii/kiwan-dental";
+        
+        // التحقق التلقائي إذا كان الرمز مخزناً مسبقاً
+        window.onload = function() {
+            const savedToken = localStorage.getItem('ghToken');
+            if(savedToken) {
+                document.getElementById('token').value = savedToken;
+                loginAndLoad();
+            }
+        };
+
+        function loginAndLoad() {
+            const token = document.getElementById('token').value.trim();
+            if(!token) {
+                alert("الرجاء إدخال رمز الوصول أولاً.");
+                return;
+            }
+            localStorage.setItem('ghToken', token);
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+            loadCases();
+        }
+
+        function logout() {
+            localStorage.removeItem('ghToken');
+            document.getElementById('token').value = '';
+            document.getElementById('admin-content').style.display = 'none';
+            document.getElementById('auth-section').style.display = 'block';
+        }
         
         // دالة لتنسيق حجم الملفات بشكل مقروء
         function formatBytes(bytes) {
@@ -75,13 +115,19 @@
         }
         
         async function loadCases() {
-            const token = document.getElementById('token').value = localStorage.getItem('ghToken') || '';
-            if(!token) { document.getElementById('cases-list').innerHTML = "الرجاء إدخال الرمز في الأعلى لتظهر الحالات."; return; }
-            localStorage.setItem('ghToken', token);
+            const token = localStorage.getItem('ghToken');
             
             try {
                 const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
-                if(!res.ok) { document.getElementById('cases-list').innerHTML = "لا توجد حالات حالياً أو ملف القائمة غير موجود."; return; }
+                if(!res.ok) {
+                    if(res.status === 401) {
+                        alert("رمز الوصول غير صحيح أو منتهي الصلاحية.");
+                        logout();
+                        return;
+                    }
+                    document.getElementById('cases-list').innerHTML = "لا توجد حالات حالياً أو ملف القائمة غير موجود.";
+                    return;
+                }
                 const data = await res.json();
                 const content = decodeURIComponent(escape(atob(data.content)));
                 const lines = content.split('\n').filter(l => l.trim());
@@ -189,7 +235,7 @@
                 listDiv.innerHTML = htmlContent;
 
             } catch(e) {
-                document.getElementById('cases-list').innerHTML = "حدث خطأ أثناء جلب الحالات. تأكد من صحة الرمز.";
+                document.getElementById('cases-list').innerHTML = "حدث خطأ أثناء جلب الحالات. تأكد من اتصال الإنترنت.";
             }
         }
 
@@ -218,7 +264,7 @@
         // حذف الحالة مع تأكيد صارم وحذف ملف الصورة من السيرفر فعلياً
         async function deleteCase(index, fileName) {
             if(!confirm("⚠️ تنبيه هام: هل أنت متأكد تماماً من رغبتك في الحذف النهائي؟\nسيتم حذف الصورة من المستودع ومن الموقع بشكل دائم.")) return;
-            const token = document.getElementById('token').value;
+            const token = localStorage.getItem('ghToken');
             
             try {
                 // 1. حذف ملف الصورة من مجلد cases
@@ -255,7 +301,7 @@
 
         // إضافة أو تعديل الحالة
         async function saveCase() {
-            const token = document.getElementById('token').value;
+            const token = localStorage.getItem('ghToken');
             const title = document.getElementById('newTitle').value;
             const category = document.getElementById('newCategory').value;
             const fileInput = document.getElementById('newFile');
@@ -345,9 +391,6 @@
             resetForm();
             loadCases();
         }
-        
-        document.getElementById('token').onchange = loadCases;
-        loadCases();
     </script>
 </body>
 </html>
