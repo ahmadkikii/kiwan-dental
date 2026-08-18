@@ -21,10 +21,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   
-  <!-- Calendly popup widget assets -->
-  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-  <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
-
   <style>
     .cases-cta { background: #f8f9fa; padding: 60px 0; text-align: center; border-bottom: 1px solid #eee; }
     .cases-cta h2 { font-size: 2.2rem; margin-bottom: 15px; color: #03263b; }
@@ -114,7 +110,7 @@
       <a href="cases.html">شاهد بعض حالاتنا</a>
       <a href="#contact">تواصل معنا</a>
     </nav>
-    <button onclick="Calendly.initPopupWidget({url: 'https://calendly.com/hit000man000/30min'});return false;" class="btn btn-primary nav-appointment">▣ &nbsp; احجز موعد</button>
+    <button onclick="window.location.href='booking.html'" class="btn btn-primary nav-appointment">▣ &nbsp; احجز موعد</button>
   </div>
 </header>
 
@@ -133,7 +129,7 @@
           <div><i>♙</i><b>عناية<br>شخصية</b></div>
         </div>
         <div class="hero-actions">
-          <button onclick="Calendly.initPopupWidget({url: 'https://calendly.com/hit000man000/30min'});return false;" class="btn btn-primary">▣ &nbsp; احجز موعد</button>
+          <button onclick="window.location.href='booking.html'" class="btn btn-primary">▣ &nbsp; احجز موعد</button>
           <a class="btn btn-whatsapp" href="https://wa.me/963956766617" target="_blank" rel="noopener">◉ واتساب</a>
           <a class="btn btn-outline" href="tel:0956766617"><span class="phone-number">095 676 6617</span> &nbsp; ☎ &nbsp; اتصل بنا</a>
         </div>
@@ -153,44 +149,32 @@
     </div>
   </section>
 
-  <!-- قسم الفريق الطبي الجديد -->
   <section class="team-section">
     <div class="container">
       <h3>فريقنا الطبي</h3>
-      
       <div class="team-grid">
-        <!-- الطبيب الأول -->
         <div class="team-member">
           <img src="assets/ahmad.jpg" alt="د. أحمد كيوان">
           <h4>د. أحمد كيوان</h4>
           <p>اختصاصي مداواة الأسنان اللبية والترميمية</p>
         </div>
-
-        <!-- الطبيب الثاني -->
         <div class="team-member">
           <img src="assets/nouran.jpg" alt="د. نوران كيوان">
           <h4>د. نوران كيوان</h4>
           <p>اختصاصية تقويم الأسنان والفكين</p>
         </div>
       </div>
-
-      <!-- النص الإضافي -->
-      <p class="team-note">
-        بالإضافة إلى فريق متكامل من الاختصاصيين في جميع المجالات
-      </p>
+      <p class="team-note">بالإضافة إلى فريق متكامل من الاختصاصيين في جميع المجالات</p>
     </div>
   </section>
 
-  <!-- معرض الحالات المصغر (السلايدر الأفقي المتحرك) -->
   <section class="cases-cta">
     <div class="container">
       <h2>شاهد نتائجنا المتميزة</h2>
       <p>نفتخر بمشاركة جزء من رحلة علاجات مرضانا وتجميل ابتساماتهم.</p>
-      
       <div id="index-cases-slider" class="cases-slider">
         <p style="width: 100%; text-align: center; color: #888;">جاري تحميل الحالات...</p>
       </div>
-
       <div style="margin-top: 30px;">
         <a class="btn btn-primary btn-lg" href="cases.html">تصفح معرض الحالات الكامل ◰</a>
       </div>
@@ -215,7 +199,7 @@
         <h2>تواصل معنا / احجز موعدك الآن</h2>
         <p>نحن هنا لخدمتك والرد على جميع استفساراتك.</p>
         <div class="contact-buttons">
-          <button onclick="Calendly.initPopupWidget({url: 'https://calendly.com/hit000man000/30min'});return false;" class="btn btn-whatsapp" style="cursor: pointer;">▣ احجز موعد عبر التقويم</button>
+          <button onclick="window.location.href='booking.html'" class="btn btn-whatsapp" style="cursor: pointer;">▣ احجز موعد الآن</button>
           <a class="btn btn-whatsapp" href="https://wa.me/963956766617" target="_blank" rel="noopener">◉ واتساب</a>
           <a class="btn btn-outline-light" href="tel:0956766617"><span class="phone-number">095 676 6617</span> &nbsp; ☎</a>
           <a class="btn btn-outline-light" href="tel:0112311425"><span class="phone-number">011 231 1425</span> &nbsp; ☎</a>
@@ -230,7 +214,6 @@
   </section>
 </main>
 
-<!-- نافذة التكبير المصغرة -->
 <div id="modal" onclick="this.style.display='none'">
   <span class="share-icon" onclick="event.stopPropagation(); if(navigator.share){navigator.share({title: 'حالة علاجية - عيادة كيوان', url: window.location.href}).catch(()=>{});}else{alert('ميزة المشاركة غير مدعومة في متصفحك');}">🔗 مشاركة</span>
   <img id="modal-img">
@@ -239,41 +222,5 @@
 <footer>جميع الحقوق محفوظة © 2026 / عيادة كيوان لطب الأسنان</footer>
 
 <script src="script.js?v=20260813"></script>
-<script>
-  fetch('assets/cases/cases-list.txt?t=' + new Date().getTime())
-    .then(res => res.text())
-    .then(data => {
-      const slider = document.getElementById('index-cases-slider');
-      let lines = data.split('\n').filter(l => l.trim());
-      
-      if(lines.length === 0) {
-        slider.innerHTML = '<p style="width: 100%; text-align: center; color: #888;">لا توجد حالات مضافة حالياً.</p>';
-        return;
-      }
-      
-      // عكس الترتيب لتظهر الحالات من الأحدث إلى الأقدم
-      lines.reverse();
-
-      slider.innerHTML = '';
-      lines.forEach(line => {
-        const parts = line.split('|');
-        if(parts.length >= 1) {
-          const file = parts[0].trim();
-          const cat = parts[1] ? parts[1].trim() : '';
-          const title = parts[2] ? parts[2].trim() : (cat ? cat : 'حالة طبيةية');
-          
-          slider.innerHTML += `
-            <div class="case-thumb-card">
-              <img src="assets/cases/${file}" alt="${title}" onclick="document.getElementById('modal-img').src=this.src; document.getElementById('modal').style.display='flex'">
-              <p>${title}</p>
-            </div>`;
-        }
-      });
-    })
-    .catch(err => {
-      console.error(err);
-      document.getElementById('index-cases-slider').innerHTML = '<p style="width: 100%; text-align: center; color: #e74c3c;">تعذر تحميل الحالات.</p>';
-    });
-</script>
 </body>
 </html>
