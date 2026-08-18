@@ -217,7 +217,7 @@
     </div>
   </section>
 
-  <!-- قسم حجز الموعد المباشر (مع شروط العمل: غير الجمعة، 9-5، فواصل ساعة، ومنع التعارض) -->
+  <!-- قسم حجز الموعد المباشر -->
   <section id="booking-section" class="booking-section">
     <div class="container">
       <div class="booking-card">
@@ -315,14 +315,14 @@
       document.getElementById('index-cases-slider').innerHTML = '<p style="width: 100%; text-align: center; color: #e74c3c;">تعذر تحميل الحالات.</p>';
     });
 
-  // كود إرسال الحجز الآمن (مع الشروط المطلوبة وفحص التعارض)
+  // كود إرسال الحجز الآمن (مع الرابط الجديد)
   async function sendBookingRequest() {
       const name = document.getElementById('visitorName').value.trim();
       const phone = document.getElementById('visitorPhone').value.trim();
       const timeInput = document.getElementById('visitorTime').value;
       const msgDiv = document.getElementById('booking-msg');
       
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbxNh2Vk8otTvARKP1yYNf0C_IJFV-1_C3Sck22bQVy_pKUs1nYBt3jDqsmP-XeGoZ1V/exec"; 
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbyrDBdSoN4XzQ3MQqZhtClOjrU7dBtK5R6W5i223kFr6cA-jbkO2DVIG_F_OzQ9UjCu/exec"; 
 
       if(!name || !phone || !timeInput) {
           msgDiv.style.color = "red";
@@ -352,7 +352,6 @@
       msgDiv.innerText = "جاري التحقق من التوفر...";
 
       try {
-          // جلب المواعيد المحجوزة مسبقاً لمنع التعارض
           const response = await fetch(scriptUrl);
           const bookedTimes = await response.json();
 
