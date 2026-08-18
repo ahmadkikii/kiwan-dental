@@ -1,1 +1,34 @@
+name: Handle Patient Booking
 
+on:
+  repository_dispatch:
+    types: [book_slot]
+
+permissions:
+  contents: write
+
+jobs:
+  add-booking:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Process Booking
+        run: |
+          PATIENT_NAME="${{ github.event.client_payload.name }}"
+          PATIENT_PHONE="${{ github.event.client_payload.phone }}"
+          APPT_TIME="${{ github.event.client_payload.time }}"
+          APPT_NOTE="${{ github.event.client_payload.note }}"
+          
+          FILE_PATH="assets/cases/booked-slots.txt"
+          mkdir -p "$(dirname "$FILE_PATH")"
+          touch "$FILE_PATH"
+          
+          echo "$PATIENT_NAME ($PATIENT_PHONE) | $APPT_TIME | $APPT_NOTE" >> "$FILE_PATH"
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "New automated appointment booked via website"
+          file_pattern: "assets/cases/booked-slots.txt"
