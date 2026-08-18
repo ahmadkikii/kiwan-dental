@@ -183,8 +183,8 @@
       const hourInput = document.getElementById('visitorHour').value;
       const msgDiv = document.getElementById('booking-msg');
       
-      // الرابط الجديد الذي زودتني به
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbwLOSO5sCv0eqC8nGRmSPtBOKbsOmWVUJgvkLB-DeUyUMx0nbRtIhJvFXS9KdLEuMwV/exec"; 
+      // الرابط الجديد المحدث
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbyE4DM1qO_3dD5IOaFAt9adLHC2mSQ29XJ8qTzKyhUw0xnJNxLqlwcKKC601FY-kyCO/exec"; 
 
       if(!name || !phone || !dateInput || !hourInput) {
           msgDiv.style.color = "red";
@@ -209,12 +209,18 @@
               msgDiv.innerText = "عذراً، هذا الموعد محجوز مسبقاً.";
               return;
           }
-          await fetch(scriptUrl, {
+          const postRes = await fetch(scriptUrl, {
               method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ name, phone, time: timeInput, note: document.getElementById('visitorNote').value })
           });
+          
           msgDiv.style.color = "green";
           msgDiv.innerText = "تم حجز موعدك بنجاح وسنؤكد لك قريباً!";
+          document.getElementById('visitorName').value = "";
+          document.getElementById('visitorPhone').value = "";
+          document.getElementById('visitorDate').value = "";
+          document.getElementById('visitorHour').value = "";
+          document.getElementById('visitorNote').value = "";
       } catch(err) { msgDiv.style.color = "red"; msgDiv.innerText = "حدث خطأ، يرجى المحاولة لاحقاً."; }
   }
 </script>
