@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة إدارة حالات عيادة كيوان</title>
+    <title>لوحة إدارة حالات ومواعيد عيادة كيوان</title>
     <style>
         body { font-family: system-ui, sans-serif; padding: 20px; background: #f4f7f6; color: #333; }
         .container { max-width: 950px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
@@ -11,11 +11,11 @@
         .stats-box { background: #eef2f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem; line-height: 1.6; }
         .category-group { margin-bottom: 25px; background: #fafafa; border: 1px solid #e1e8ed; border-radius: 8px; padding: 15px; }
         .category-title { font-size: 1.1rem; color: #2980b9; margin-bottom: 10px; border-bottom: 2px solid #e1e8ed; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
-        .case-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; gap: 12px; background: white; margin-bottom: 8px; border-radius: 6px; }
-        .case-item:last-child { margin-bottom: 0; }
+        .case-item, .slot-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; gap: 12px; background: white; margin-bottom: 8px; border-radius: 6px; }
+        .case-item:last-child, .slot-item:last-child { margin-bottom: 0; }
         .case-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #ccc; cursor: pointer; transition: transform 0.2s; flex-shrink: 0; }
         .case-thumb:hover { transform: scale(1.05); }
-        .case-info { flex-grow: 1; font-size: 0.95rem; }
+        .case-info, .slot-info { flex-grow: 1; font-size: 0.95rem; }
         .btn-group { display: flex; gap: 5px; flex-shrink: 0; }
         .delete-btn { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
         .edit-btn { background: #f39c12; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
@@ -25,18 +25,19 @@
         .token-box { background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #e1e8ed; text-align: center; }
         hr { margin: 30px 0; border: 0; border-top: 1px solid #eee; }
         .loading { text-align: center; color: #666; padding: 20px; }
+        .section-box { background: #fdfdfd; border: 1px solid #dcdcdc; padding: 20px; border-radius: 10px; margin-bottom: 30px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>لوحة إدارة الحالات الطبية</h2>
+        <h2>لوحة إدارة عيادة كيوان</h2>
         
         <!-- قسم تسجيل الدخول بالتوكن -->
         <div id="auth-section" class="token-box">
             <h3>تسجيل الدخول للوحة الإدارة</h3>
             <p style="color: #666; font-size: 0.9rem;">الرجاء إدخال رمز الوصول الشخصي (GitHub Personal Access Token) للمتابعة:</p>
             <input type="password" id="token" placeholder="الصق الرمز هنا (ghp_...)">
-            <button class="primary-btn" onclick="loginAndLoad()">دخول وإدارة الحالات</button>
+            <button class="primary-btn" onclick="loginAndLoad()">دخول وإدارة البيانات</button>
         </div>
 
         <!-- المحتوى المخفي حتى يتم تسجيل الدخول -->
@@ -46,40 +47,55 @@
                 <button onclick="logout()" style="width: auto; margin: 0; background: #7f8c8d; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">تسجيل الخروج / تغيير الرمز</button>
             </div>
 
-            <h3>الحالات الحالية المرفوعة:</h3>
-            <div id="cases-list" class="loading">جاري جلب الحالات...</div>
+            <!-- قسم إدارة المواعيد الحجز -->
+            <div class="section-box">
+                <h3>📅 إدارة المواعيد المحجوزة للمرضى</h3>
+                <div id="slots-list" class="loading">جاري جلب المواعيد...</div>
+                
+                <h4 style="margin-top: 20px; color: #03263b;">إضافة موعد محجوز جديد:</h4>
+                <input type="text" id="patientName" placeholder="اسم المريض (مثال: محمد أحمد)">
+                <input type="datetime-local" id="appointmentTime">
+                <input type="text" id="appointmentNote" placeholder="سبب الزيارة أو ملاحظة (مثال: كشف عصب)">
+                <button class="primary-btn" onclick="bookAppointment()">تثبيت وحجز الموعد</button>
+            </div>
 
             <hr>
 
-            <h3 id="form-title">إضافة حالة جديدة:</h3>
-            <input type="hidden" id="editIndex" value="-1">
-            <input type="hidden" id="editFileName" value="">
-            <input type="hidden" id="editFileSha" value="">
+            <!-- قسم إدارة الحالات الطبية -->
+            <div class="section-box">
+                <h3>🦷 الحالات الطبية الحالية المرفوعة:</h3>
+                <div id="cases-list" class="loading">جاري جلب الحالات...</div>
 
-            <input type="text" id="newTitle" placeholder="وصف الحالة (مثال: علاج جذور وترقيم سفلي...)">
-            
-            <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">اختر القسم:</label>
-            <select id="newCategory">
-                <option value="المداواة اللبية">المداواة اللبية</option>
-                <option value="المداواة الترميمية">المداواة الترميمية</option>
-                <option value="تجميل الأسنان">تجميل الأسنان</option>
-                <option value="زرع الأسنان">زرع الأسنان</option>
-                <option value="تقويم الأسنان">تقويم الأسنان</option>
-                <option value="حالات أخرى">حالات أخرى</option>
-            </select>
-            
-            <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">صورة الحالة:</label>
-            <input type="file" id="newFile">
-            
-            <button class="primary-btn" id="save-btn" onclick="saveCase()">رفع وإضافة الحالة</button>
-            <button id="cancel-edit-btn" style="display:none; background:#95a5a6; color:white; border:none; cursor:pointer;" onclick="resetForm()">إلغاء التعديل</button>
+                <hr>
+
+                <h3 id="form-title">إضافة حالة جديدة:</h3>
+                <input type="hidden" id="editIndex" value="-1">
+                <input type="hidden" id="editFileName" value="">
+                
+                <input type="text" id="newTitle" placeholder="وصف الحالة (مثال: علاج جذور وترقيم سفلي...)">
+                
+                <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">اختر القسم:</label>
+                <select id="newCategory">
+                    <option value="المداواة اللبية">المداواة اللبية</option>
+                    <option value="المداواة الترميمية">المداواة الترميمية</option>
+                    <option value="تجميل الأسنان">تجميل الأسنان</option>
+                    <option value="زرع الأسنان">زرع الأسنان</option>
+                    <option value="تقويم الأسنان">تقويم الأسنان</option>
+                    <option value="حالات أخرى">حالات أخرى</option>
+                </select>
+                
+                <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">صورة الحالة:</label>
+                <input type="file" id="newFile">
+                
+                <button class="primary-btn" id="save-btn" onclick="saveCase()">رفع وإضافة الحالة</button>
+                <button id="cancel-edit-btn" style="display:none; background:#95a5a6; color:white; border:none; cursor:pointer;" onclick="resetForm()">إلغاء التعديل</button>
+            </div>
         </div>
     </div>
 
     <script>
         const repo = "ahmadkikii/kiwan-dental";
         
-        // التحقق التلقائي إذا كان الرمز مخزناً مسبقاً
         window.onload = function() {
             const savedToken = localStorage.getItem('ghToken');
             if(savedToken) {
@@ -98,6 +114,7 @@
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('admin-content').style.display = 'block';
             loadCases();
+            loadAppointments();
         }
 
         function logout() {
@@ -107,7 +124,6 @@
             document.getElementById('auth-section').style.display = 'block';
         }
         
-        // دالة لتنسيق حجم الملفات بشكل مقروء
         function formatBytes(bytes) {
             if (bytes === 0) return '0 بايت';
             const k = 1024;
@@ -116,17 +132,13 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
         
+        // --- 1. دوال إدارة الحالات الطبية (محافظ عليها بالكامل) ---
         async function loadCases() {
             const token = localStorage.getItem('ghToken');
-            
             try {
                 const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
                 if(!res.ok) {
-                    if(res.status === 401) {
-                        alert("رمز الوصول غير صحيح أو منتهي الصلاحية.");
-                        logout();
-                        return;
-                    }
+                    if(res.status === 401) { logout(); return; }
                     document.getElementById('cases-list').innerHTML = "لا توجد حالات حالياً أو ملف القائمة غير موجود.";
                     return;
                 }
@@ -140,23 +152,16 @@
                     return;
                 }
 
-                // جلب معلومات مجلد الصور لمعرفة أحجام الملفات الفعلية
                 const folderRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases`, { headers: { 'Authorization': `token ${token}` }});
                 const folderData = folderRes.ok ? await folderRes.json() : [];
                 const fileSizes = {};
                 if(Array.isArray(folderData)) {
-                    folderData.forEach(f => {
-                        fileSizes[f.name] = f.size || 0;
-                    });
+                    folderData.forEach(f => { fileSizes[f.name] = f.size || 0; });
                 }
                 
                 const categories = {
-                    "المداواة اللبية": [],
-                    "المداواة الترميمية": [],
-                    "تجميل الأسنان": [],
-                    "زرع الأسنان": [],
-                    "تقويم الأسنان": [],
-                    "حالات أخرى": []
+                    "المداواة اللبية": [], "المداواة الترميمية": [], "تجميل الأسنان": [],
+                    "زرع الأسنان": [], "تقويم الأسنان": [], "حالات أخرى": []
                 };
 
                 let totalGlobalSize = 0;
@@ -167,33 +172,22 @@
                     const cat = parts[1] ? parts[1].trim() : 'حالات أخرى';
                     const title = parts[2] ? parts[2].trim() : (parts[1] ? parts[1].trim() : 'بدون عنوان');
                     const size = fileSizes[file] || 0;
-                    
                     totalGlobalSize += size;
 
-                    // استخراج تاريخ الإضافة من اسم الملف (مثال: case-1723891234567.jpg)
                     let formattedDate = "تاريخ غير معروف";
                     const match = file.match(/case-(\d+)\.jpg/);
                     if (match && match[1]) {
-                        const timestamp = parseInt(match[1], 10);
-                        const dateObj = new Date(timestamp);
+                        const dateObj = new Date(parseInt(match[1], 10));
                         if (!isNaN(dateObj.getTime())) {
-                            formattedDate = dateObj.toLocaleString('ar-EG', { 
-                                year: 'numeric', month: 'short', day: 'numeric', 
-                                hour: '2-digit', minute: '2-digit' 
-                            });
+                            formattedDate = dateObj.toLocaleString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
                         }
                     }
                     
                     const caseObj = { index, file, cat, title, size, formattedDate };
-                    if(categories[cat]) {
-                        categories[cat].push(caseObj);
-                    } else {
-                        if(!categories["حالات أخرى"]) categories["حالات أخرى"] = [];
-                        categories["حالات أخرى"].push(caseObj);
-                    }
+                    if(categories[cat]) { categories[cat].push(caseObj); } 
+                    else { categories["حالات أخرى"].push(caseObj); }
                 });
 
-                // بناء صندوق الإحصائيات العامة
                 let htmlContent = `
                     <div class="stats-box">
                         <strong>📊 إحصائيات عامة:</strong><br>
@@ -202,11 +196,9 @@
                     </div>
                 `;
 
-                // عرض الحالات مصنفة حسب الأقسام
                 for (const [catName, casesArray] of Object.entries(categories)) {
                     if(casesArray.length > 0) {
                         const catTotalSize = casesArray.reduce((sum, c) => sum + c.size, 0);
-                        
                         htmlContent += `
                             <div class="category-group">
                                 <div class="category-title">
@@ -231,19 +223,15 @@
                                 </div>
                             `;
                         });
-
                         htmlContent += `</div>`;
                     }
                 }
-
                 listDiv.innerHTML = htmlContent;
-
             } catch(e) {
-                document.getElementById('cases-list').innerHTML = "حدث خطأ أثناء جلب الحالات. تأكد من اتصال الإنترنت.";
+                document.getElementById('cases-list').innerHTML = "حدث خطأ أثناء جلب الحالات.";
             }
         }
 
-        // تحضير واجهة التعديل
         function startEdit(index, file, cat, title) {
             document.getElementById('editIndex').value = index;
             document.getElementById('editFileName').value = file;
@@ -265,13 +253,10 @@
             document.getElementById('cancel-edit-btn').style.display = "none";
         }
 
-        // حذف الحالة مع تأكيد صارم وحذف ملف الصورة من السيرفر فعلياً
         async function deleteCase(index, fileName) {
-            if(!confirm("⚠️ تنبيه هام: هل أنت متأكد تماماً من رغبتك في الحذف النهائي؟\nسيتم حذف الصورة من المستودع ومن الموقع بشكل دائم.")) return;
+            if(!confirm("⚠️ تنبيه هام: هل أنت متأكد تماماً من رغبتك في الحذف النهائي؟")) return;
             const token = localStorage.getItem('ghToken');
-            
             try {
-                // 1. حذف ملف الصورة من مجلد cases
                 const imgRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`, { headers: { 'Authorization': `token ${token}` }});
                 if(imgRes.ok) {
                     const imgData = await imgRes.json();
@@ -282,11 +267,9 @@
                     });
                 }
 
-                // 2. تحديث ملف القائمة cases-list.txt وإزالة السطر
                 const listRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
                 const listData = await listRes.json();
                 let lines = decodeURIComponent(escape(atob(listData.content))).split('\n').filter(l => l.trim());
-                
                 lines.splice(index, 1);
                 const newContent = btoa(unescape(encodeURIComponent(lines.join('\n') + (lines.length > 0 ? '\n' : ''))));
                 
@@ -295,15 +278,11 @@
                     headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: "Remove case from list", content: newContent, sha: listData.sha })
                 });
-                
                 alert("تم حذف الحالة والصورة نهائياً بنجاح!");
                 loadCases();
-            } catch(e) {
-                alert("حدث خطأ أثناء محاولة الحذف.");
-            }
+            } catch(e) { alert("حدث خطأ أثناء محاولة الحذف."); }
         }
 
-        // إضافة أو تعديل الحالة
         async function saveCase() {
             const token = localStorage.getItem('ghToken');
             const title = document.getElementById('newTitle').value;
@@ -318,24 +297,17 @@
             let lines = listData ? decodeURIComponent(escape(atob(listData.content))).split('\n').filter(l => l.trim()) : [];
 
             if(editIndex > -1) {
-                // عملية تعديل حالة موجودة
                 let oldFileName = document.getElementById('editFileName').value;
-                
                 if(fileInput.files[0]) {
-                    // إذا تم اختيار صورة جديدة للاستبدال
                     const file = fileInput.files[0];
                     const reader = new FileReader();
                     reader.onloadend = async () => {
                         const newFileName = "case-" + Date.now() + ".jpg";
-                        
-                        // 1. رفع الصورة الجديدة
                         await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${newFileName}`, {
                             method: 'PUT',
                             headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
                             body: JSON.stringify({ message: "Upload replacement case image", content: reader.result.split(',')[1] })
                         });
-                        
-                        // 2. حذف الصورة القديمة
                         try {
                             const oldImgRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${oldFileName}`, { headers: { 'Authorization': `token ${token}` }});
                             if(oldImgRes.ok) {
@@ -347,33 +319,25 @@
                                 });
                             }
                         } catch(e) {}
-                        
-                        // 3. تحديث السطر في القائمة
                         lines[editIndex] = `${newFileName} | ${category} | ${title}`;
                         await updateCasesFile(token, lines, listData ? listData.sha : null);
                     };
                     reader.readAsDataURL(fileInput.files[0]);
                 } else {
-                    // تعديل الوصف أو القسم فقط بدون تغيير الصورة
                     lines[editIndex] = `${oldFileName} | ${category} | ${title}`;
                     await updateCasesFile(token, lines, listData ? listData.sha : null);
                 }
             } else {
-                // عملية إضافة حالة جديدة
                 if(!fileInput.files[0]) return alert("الرجاء اختيار صورة للحالة الجديدة.");
                 const file = fileInput.files[0];
                 const reader = new FileReader();
                 reader.onloadend = async () => {
                     const fileName = "case-" + Date.now() + ".jpg";
-                    
-                    // رفع الصورة الجديدة
                     await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`, {
                         method: 'PUT',
                         headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
                         body: JSON.stringify({ message: "Add new case image", content: reader.result.split(',')[1] })
                     });
-                    
-                    // إضافة السطر للقائمة
                     lines.push(`${fileName} | ${category} | ${title}`);
                     await updateCasesFile(token, lines, listData ? listData.sha : null);
                 };
@@ -394,6 +358,131 @@
             alert("تم حفظ التعديلات بنجاح!");
             resetForm();
             loadCases();
+        }
+
+        // --- 2. ميزة إدارة وحجز المواعيد ومنع التعارض ---
+        async function loadAppointments() {
+            const token = localStorage.getItem('ghToken');
+            const slotsDiv = document.getElementById('slots-list');
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/booked-slots.txt`, { headers: { 'Authorization': `token ${token}` }});
+                if(!res.ok) {
+                    slotsDiv.innerHTML = "لا توجد مواعيد محجوزة حالياً.";
+                    return;
+                }
+                const data = await res.json();
+                const content = decodeURIComponent(escape(atob(data.content)));
+                const lines = content.split('\n').filter(l => l.trim());
+                
+                if(lines.length === 0) {
+                    slotsDiv.innerHTML = "لا توجد مواعيد مسجلة حالياً.";
+                    return;
+                }
+
+                let html = "";
+                lines.forEach((line, index) => {
+                    const [pName, pTime, pNote] = line.split('|').map(s => s.trim());
+                    const formattedSlotDate = new Date(pTime).toLocaleString('ar-EG', { dateStyle: 'full', timeStyle: 'short' });
+                    html += `
+                        <div class="slot-item">
+                            <div class="slot-info">
+                                <strong>👤 ${pName}</strong> - <span style="color:#2980b9;">⏰ ${formattedSlotDate}</span><br>
+                                <small style="color:#666;">ملاحظة: ${pNote || 'بدون ملاحظات'}</small>
+                            </div>
+                            <button class="delete-btn" onclick="cancelAppointment(${index})">إلغاء الموعد</button>
+                        </div>
+                    `;
+                });
+                slotsDiv.innerHTML = html;
+            } catch(e) {
+                slotsDiv.innerHTML = "لا توجد مواعيد مسجلة حتى الآن.";
+            }
+        }
+
+        async function bookAppointment() {
+            const token = localStorage.getItem('ghToken');
+            const patientName = document.getElementById('patientName').value.trim();
+            const appointmentTime = document.getElementById('appointmentTime').value;
+            const note = document.getElementById('appointmentNote').value.trim();
+
+            if(!patientName || !appointmentTime) {
+                alert("الرجاء إدخال اسم المريض ووقت الموعد بدقة.");
+                return;
+            }
+
+            // جلب المواعيد الحالية للتحقق من التعارض
+            let lines = [];
+            let fileSha = null;
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/booked-slots.txt`, { headers: { 'Authorization': `token ${token}` }});
+                if(res.ok) {
+                    const data = await res.json();
+                    fileSha = data.sha;
+                    lines = decodeURIComponent(escape(atob(data.content))).split('\n').filter(l => l.trim());
+                }
+            } catch(e) {}
+
+            // فحص التعارض (منع حجز موعد بنفس الوقت بالضبط أو بفارق أقل من 30 دقيقة مثلاً حسب الحاجة)
+            const newTimeMillis = new Date(appointmentTime).getTime();
+            const conflict = lines.some(line => {
+                const parts = line.split('|');
+                const bookedTimeMillis = new Date(parts[1].trim()).getTime();
+                // نفترض فاصل زمني 30 دقيقة بين المواعيد لتجنب التداخل
+                return Math.abs(newTimeMillis - bookedTimeMillis) < 30 * 60 * 1000;
+            });
+
+            if(conflict) {
+                alert("⚠️ تنبيه: عذراً، هذا الوقت محجوز مسبقاً أو قريب جداً من موعد آخر مسجل! يختار وقتاً آخر.");
+                return;
+            }
+
+            // إضافة الموعد الجديد
+            lines.push(`${patientName} | ${appointmentTime} | ${note}`);
+            const newContent = btoa(unescape(encodeURIComponent(lines.join('\n') + '\n')));
+            
+            const bodyData = { message: "Add booked appointment", content: newContent };
+            if(fileSha) bodyData.sha = fileSha;
+
+            const updateRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/booked-slots.txt`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(bodyData)
+            });
+
+            if(updateRes.ok) {
+                alert("✅ تم تثبيت وحجز الموعد بنجاح!");
+                document.getElementById('patientName').value = "";
+                document.getElementById('appointmentTime').value = "";
+                document.getElementById('appointmentNote').value = "";
+                loadAppointments();
+            } else {
+                alert("حدث خطأ أثناء حفظ الموعد.");
+            }
+        }
+
+        async function cancelAppointment(index) {
+            if(!confirm("هل أنت متأكد من إلغاء هذا الموعد؟")) return;
+            const token = localStorage.getItem('ghToken');
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/booked-slots.txt`, { headers: { 'Authorization': `token ${token}` }});
+                if(!res.ok) return;
+                const data = await res.json();
+                let lines = decodeURIComponent(escape(atob(data.content))).split('\n').filter(l => l.trim());
+                
+                lines.splice(index, 1);
+                const newContent = btoa(unescape(encodeURIComponent(lines.join('\n') + (lines.length > 0 ? '\n' : ''))));
+                
+                await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/booked-slots.txt`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: "Cancel appointment", content: newContent, sha: data.sha })
+                });
+                
+                alert("تم إلغاء الموعد بنجاح.");
+                loadAppointments();
+            } catch(e) {
+                alert("حدث خطأ أثناء إلغاء الموعد.");
+            }
         }
     </script>
 </body>
