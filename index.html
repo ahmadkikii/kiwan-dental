@@ -33,7 +33,6 @@
     .case-thumb-card p { margin-top: 10px; font-size: 0.95rem; color: #333; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .btn-lg { padding: 15px 40px; font-size: 1.2rem; border-radius: 50px; text-decoration: none; display: inline-block; transition: 0.3s; }
     
-    /* تنسيق قسم الفريق الطبي */
     .team-section { background: #ffffff; padding: 50px 0; text-align: center; border-bottom: 1px solid #eee; }
     .team-section h3 { font-size: 2.2rem; margin-bottom: 35px; color: #03263b; }
     .team-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 25px; }
@@ -43,7 +42,6 @@
     .team-member p { margin: 0; color: #555; font-size: 0.95rem; line-height: 1.6; }
     .team-note { color: #666; font-size: 1.05rem; font-weight: 600; margin-top: 30px; }
     
-    /* تنسيق قسم حجز المواعيد الآمن */
     .booking-section { background: #fdfdfd; padding: 60px 0; border-bottom: 1px solid #eee; }
     .booking-card { max-width: 650px; margin: 0 auto; background: #ffffff; padding: 35px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); border: 1px solid #e1e8ed; }
     .booking-card h3 { color: #03263b; text-align: center; margin-top: 0; font-size: 1.8rem; margin-bottom: 10px; }
@@ -56,63 +54,17 @@
     .booking-btn:hover { background: #219653; }
     #booking-msg { margin-top: 15px; text-align: center; font-size: 1rem; font-weight: bold; }
 
-    /* مودال التكبير في الرئيسية */
     #modal { display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
     #modal img { max-width: 90%; max-height: 80%; border-radius: 5px; }
   </style>
-
-  <!-- البيانات المهيكلة (JSON-LD Schema Markup) الخاصة بالعيادة -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Dentist",
-    "name": "عيادة كيوان لطب الأسنان",
-    "image": "https://drkiwan.com/logo.png",
-    "@id": "https://drkiwan.com",
-    "url": "https://drkiwan.com",
-    "telephone": "+963956766617",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "البحصة - مقابل فندق فينيسيا - جانب صيدلية فاديا عكة - طابق أول",
-      "addressLocality": "دمشق",
-      "addressRegion": "دمشق",
-      "addressCountry": "SY"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 33.5138,
-      "longitude": 36.2765
-    },
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-        "Saturday",
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday"
-      ],
-      "opens": "09:00",
-      "closes": "17:00"
-    },
-    "priceRange": "$$"
-  }
-  </script>
 </head>
 <body>
 
-<!-- زر الواتساب العائم -->
-<a href="https://wa.me/963956766617" class="float-whatsapp" target="_blank" rel="noopener" aria-label="تواصل عبر واتساب">
-  <span>💬</span>
-</a>
+<a href="https://wa.me/963956766617" class="float-whatsapp" target="_blank" rel="noopener" aria-label="تواصل عبر واتساب"><span>💬</span></a>
 
 <header class="site-header">
   <div class="container nav-wrap">
-    <a class="brand" href="#home" aria-label="عيادة كيوان لطب الأسنان">
-      <span class="brand-text"><strong>عيادة كيوان</strong><small>لطب الأسنان</small></span>
-      <span class="tooth-logo" aria-hidden="true">♡</span>
-    </a>
+    <a class="brand" href="#home" aria-label="عيادة كيوان لطب الأسنان"><span class="brand-text"><strong>عيادة كيوان</strong><small>لطب الأسنان</small></span><span class="tooth-logo" aria-hidden="true">♡</span></a>
     <button class="menu-toggle" aria-label="فتح القائمة" aria-expanded="false">☰</button>
     <nav class="nav">
       <a class="active" href="#home">الرئيسية</a>
@@ -155,92 +107,40 @@
         <p class="eyebrow">عن العيادة</p>
         <h2>عناية دقيقة، وابتسامة بثقة</h2>
         <p>في عيادة كيوان لطب الأسنان نقدم خدمات علاجية وتجميلية وفق معايير الجودة والعناية، مع الاهتمام براحة المريض ونتيجة العلاج.</p>
-        <p>هدفنا أن نمنحك تجربة صحية وجمالية تدوم، ضمن بيئة مريحة وتجهيزات حديثة.</p>
         <a class="btn btn-dark" href="#contact">تواصل معنا</a>
       </div>
     </div>
   </section>
 
-  <!-- قسم الفريق الطبي -->
   <section class="team-section">
     <div class="container">
       <h3>فريقنا الطبي</h3>
-      
       <div class="team-grid">
-        <!-- الطبيب الأول -->
-        <div class="team-member">
-          <img src="assets/ahmad.jpg" alt="د. أحمد كيوان">
-          <h4>د. أحمد كيوان</h4>
-          <p>اختصاصي مداواة الأسنان اللبية والترميمية</p>
-        </div>
-
-        <!-- الطبيب الثاني -->
-        <div class="team-member">
-          <img src="assets/nouran.jpg" alt="د. نوران كيوان">
-          <h4>د. نوران كيوان</h4>
-          <p>اختصاصية تقويم الأسنان والفكين</p>
-        </div>
+        <div class="team-member"><img src="assets/ahmad.jpg" alt="د. أحمد كيوان"><h4>د. أحمد كيوان</h4><p>اختصاصي مداواة الأسنان اللبية والترميمية</p></div>
+        <div class="team-member"><img src="assets/nouran.jpg" alt="د. نوران كيوان"><h4>د. نوران كيوان</h4><p>اختصاصية تقويم الأسنان والفكين</p></div>
       </div>
-
-      <!-- النص الإضافي -->
-      <p class="team-note">
-        بالإضافة إلى فريق متكامل من الاختصاصيين في جميع المجالات
-      </p>
+      <p class="team-note">بالإضافة إلى فريق متكامل من الاختصاصيين في جميع المجالات</p>
     </div>
   </section>
 
-  <!-- معرض الحالات المصغر (السلايدر الأفقي المتحرك) -->
   <section class="cases-cta">
     <div class="container">
       <h2>شاهد نتائجنا المتميزة</h2>
       <p>نفتخر بمشاركة جزء من رحلة علاجات مرضانا وتجميل ابتساماتهم.</p>
-      
-      <div id="index-cases-slider" class="cases-slider">
-        <p style="width: 100%; text-align: center; color: #888;">جاري تحميل الحالات...</p>
-      </div>
-
-      <div style="margin-top: 30px;">
-        <a class="btn btn-primary btn-lg" href="cases.html">تصفح معرض الحالات الكامل ◰</a>
-      </div>
+      <div id="index-cases-slider" class="cases-slider"><p style="width: 100%; text-align: center; color: #888;">جاري تحميل الحالات...</p></div>
+      <div style="margin-top: 30px;"><a class="btn btn-primary btn-lg" href="cases.html">تصفح معرض الحالات الكامل ◰</a></div>
     </div>
   </section>
 
-  <section id="services" class="section services">
-    <div class="container">
-      <div class="section-title"><h2>خدماتنا</h2><span></span></div>
-      <div class="service-grid">
-        <article class="service-card"><div class="service-icon">✦</div><h3>مداواة الأسنان<br>اللبية والترميمية</h3><img src="assets/service-4.jpg" alt=""></article>
-        <article class="service-card"><div class="service-icon">⌁</div><h3>تقويم الأسنان</h3><img src="assets/service-3.jpg" alt=""></article>
-        <article class="service-card"><div class="service-icon">✚</div><h3>زرع الأسنان</h3><img src="assets/service-2.jpg" alt=""></article>
-        <article class="service-card"><div class="service-icon">♡</div><h3>تجميل الأسنان</h3><img src="assets/service-1.jpg" alt=""></article>
-      </div>
-    </div>
-  </section>
-
-  <!-- قسم حجز الموعد المباشر -->
   <section id="booking-section" class="booking-section">
     <div class="container">
       <div class="booking-card">
         <h3>حجز موعد في العيادة</h3>
         <p class="subtitle">أوقات العمل: من السبت إلى الخميس (الساعات الكاملة من 9:00 صباحاً حتى 4:00 عصراً)</p>
-        
-        <div class="form-group">
-          <label>الاسم الكامل:</label>
-          <input type="text" id="visitorName" placeholder="أدخل اسمك الكريم">
-        </div>
-        
-        <div class="form-group">
-          <label>رقم الهاتف (للتواصل أو الواتساب):</label>
-          <input type="tel" id="visitorPhone" placeholder="مثال: 0956766617">
-        </div>
-
-        <div class="form-group">
-          <label>اختر تاريخ الموعد:</label>
-          <input type="date" id="visitorDate">
-        </div>
-
-        <div class="form-group">
-          <label>اختر الساعة:</label>
+        <div class="form-group"><label>الاسم الكامل:</label><input type="text" id="visitorName" placeholder="أدخل اسمك الكريم"></div>
+        <div class="form-group"><label>رقم الهاتف:</label><input type="tel" id="visitorPhone" placeholder="مثال: 0956766617"></div>
+        <div class="form-group"><label>تاريخ الموعد:</label><input type="date" id="visitorDate"></div>
+        <div class="form-group"><label>اختر الساعة:</label>
           <select id="visitorHour">
             <option value="">اختر ساعة الدوام</option>
             <option value="09">09:00 صباحاً</option>
@@ -253,12 +153,7 @@
             <option value="16">04:00 عصراً</option>
           </select>
         </div>
-        
-        <div class="form-group">
-          <label>سبب الزيارة أو ملاحظة:</label>
-          <input type="text" id="visitorNote" placeholder="مثال: ألم في الضرس / كشف دوري / تقويم">
-        </div>
-        
+        <div class="form-group"><label>سبب الزيارة:</label><input type="text" id="visitorNote" placeholder="مثال: كشف دوري"></div>
         <button class="booking-btn" onclick="sendBookingRequest()">تثبيت وإرسال حجز الموعد</button>
         <div id="booking-msg"></div>
       </div>
@@ -269,68 +164,18 @@
     <div class="container contact-grid">
       <div class="contact-cta">
         <h2>تواصل معنا / احجز موعدك الآن</h2>
-        <p>نحن هنا لخدمتك والرد على جميع استفساراتك.</p>
         <div class="contact-buttons">
           <a class="btn btn-whatsapp" href="https://wa.me/963956766617" target="_blank" rel="noopener">◉ واتساب</a>
-          <a class="btn btn-outline-light" href="tel:0956766617"><span class="phone-number">095 676 6617</span> &nbsp; ☎</a>
-          <a class="btn btn-outline-light" href="tel:0112311425"><span class="phone-number">011 231 1425</span> &nbsp; ☎</a>
         </div>
       </div>
-      <div class="contact-info">
-        <div class="info-row"><span class="info-icon">⌖</span><div><strong>العنوان</strong><a class="location-link" href="https://maps.app.goo.gl/LBmP9zxNT2rYELF67" target="_blank" rel="noopener"><span>دمشق - بحصة - مقابل فندق فينيسيا<br>جانب صيدلية فاديا عكة - طابق أول</span><b>📍 موقع العيادة على الخريطة</b></a></div></div>
-        <div class="info-row"><span class="info-icon">◷</span><div><strong>ساعات العمل</strong><p>السبت إلى الخميس: 9:00 صباحاً - 5:00 مساءً (الجمعة عطلة)</p></div></div>
-      </div>
-      <div class="contact-photo"><img src="assets/clinic-room.jpg" alt="غرفة العلاج في عيادة كيوان"></div>
     </div>
   </section>
 </main>
 
-<!-- نافذة التكبير المصغرة -->
-<div id="modal" onclick="this.style.display='none'">
-  <span class="share-icon" onclick="event.stopPropagation(); if(navigator.share){navigator.share({title: 'حالة علاجية - عيادة كيوان', url: window.location.href}).catch(()=>{});}else{alert('ميزة المشاركة غير مدعومة في متصفحك');}">🔗 مشاركة</span>
-  <img id="modal-img">
-</div>
-
-<footer>جميع الحقوق محفوظة © 2026 / عيادة كيوان لطب الأسنان</footer>
+<div id="modal" onclick="this.style.display='none'"><img id="modal-img"></div>
 
 <script src="script.js?v=20260813"></script>
 <script>
-  // كود جلب الحالات لمعرض الصفحة الرئيسية
-  fetch('assets/cases/cases-list.txt?t=' + new Date().getTime())
-    .then(res => res.text())
-    .then(data => {
-      const slider = document.getElementById('index-cases-slider');
-      let lines = data.split('\n').filter(l => l.trim());
-      
-      if(lines.length === 0) {
-        slider.innerHTML = '<p style="width: 100%; text-align: center; color: #888;">لا توجد حالات مضافة حالياً.</p>';
-        return;
-      }
-      
-      lines.reverse();
-
-      slider.innerHTML = '';
-      lines.forEach(line => {
-        const parts = line.split('|');
-        if(parts.length >= 1) {
-          const file = parts[0].trim();
-          const cat = parts[1] ? parts[1].trim() : '';
-          const title = parts[2] ? parts[2].trim() : (cat ? cat : 'حالة طبية');
-          
-          slider.innerHTML += `
-            <div class="case-thumb-card">
-              <img src="assets/cases/${file}" alt="${title}" onclick="document.getElementById('modal-img').src=this.src; document.getElementById('modal').style.display='flex'">
-              <p>${title}</p>
-            </div>`;
-        }
-      });
-    })
-    .catch(err => {
-      console.error(err);
-      document.getElementById('index-cases-slider').innerHTML = '<p style="width: 100%; text-align: center; color: #e74c3c;">تعذر تحميل الحالات.</p>';
-    });
-
-  // كود إرسال الحجز بالساعات الكاملة
   async function sendBookingRequest() {
       const name = document.getElementById('visitorName').value.trim();
       const phone = document.getElementById('visitorPhone').value.trim();
@@ -338,63 +183,39 @@
       const hourInput = document.getElementById('visitorHour').value;
       const msgDiv = document.getElementById('booking-msg');
       
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbwnNMaIkBsfHKml7SG6uJw1PWw7NNGS_8_NPV9Vmgesk1Je9gUUVAdpwmQhZdrgrgG5/exec"; 
+      // الرابط الجديد الذي زودتني به
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbwLOSO5sCv0eqC8nGRmSPtBOKbsOmWVUJgvkLB-DeUyUMx0nbRtIhJvFXS9KdLEuMwV/exec"; 
 
       if(!name || !phone || !dateInput || !hourInput) {
           msgDiv.style.color = "red";
-          msgDiv.innerText = "الرجاء تعبئة كافة الحقول واختيار التاريخ والساعة.";
+          msgDiv.innerText = "الرجاء تعبئة كافة الحقول.";
           return;
       }
 
-      // تجميع الصيغة بالشكل: YYYY-MM-DD HH:00 للتخزين والمقارنة الدقيقة
       const timeInput = dateInput + " " + hourInput + ":00";
-
       const selectedDate = new Date(dateInput);
-      const day = selectedDate.getDay(); 
-
-      // منع يوم الجمعة (الجمعة هو 5)
-      if (day === 5) {
+      if (selectedDate.getDay() === 5) {
           msgDiv.style.color = "red";
           msgDiv.innerText = "عذراً، العيادة مغلقة يوم الجمعة.";
           return;
       }
 
-      msgDiv.style.color = "#333";
-      msgDiv.innerText = "جاري التحقق من التوفر...";
-
+      msgDiv.innerText = "جاري الحجز...";
       try {
           const response = await fetch(scriptUrl);
           const bookedTimes = await response.json();
-
           if (bookedTimes.includes(timeInput)) {
               msgDiv.style.color = "red";
               msgDiv.innerText = "عذراً، هذا الموعد محجوز مسبقاً.";
               return;
           }
-
-          msgDiv.innerText = "جاري إرسال الطلب...";
           await fetch(scriptUrl, {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ 
-                  name, phone, time: timeInput, 
-                  note: document.getElementById('visitorNote').value 
-              })
+              method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, phone, time: timeInput, note: document.getElementById('visitorNote').value })
           });
-
           msgDiv.style.color = "green";
-          msgDiv.innerText = "تم حجز موعدك بنجاح!";
-          document.getElementById('visitorName').value = "";
-          document.getElementById('visitorPhone').value = "";
-          document.getElementById('visitorDate').value = "";
-          document.getElementById('visitorHour').value = "";
-          document.getElementById('visitorNote').value = "";
-
-      } catch(err) {
-          msgDiv.style.color = "red";
-          msgDiv.innerText = "حدث خطأ، يرجى المحاولة لاحقاً.";
-      }
+          msgDiv.innerText = "تم حجز موعدك بنجاح وسنؤكد لك قريباً!";
+      } catch(err) { msgDiv.style.color = "red"; msgDiv.innerText = "حدث خطأ، يرجى المحاولة لاحقاً."; }
   }
 </script>
 </body>
