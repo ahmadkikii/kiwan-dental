@@ -63,7 +63,7 @@
       <div class="form-group">
         <label>اليوم المفضل *</label>
         <input type="date" id="appointmentDate" lang="ar" required>
-        <div id="error-msg">عذراً، العيادة مغلقة يوم الجمعة. يرجى اختيار يوم آخر.</div>
+        <div id="error-msg">عذراً، العيادة مغلقة يوم الجمعة أو هذا الوقت محجوز مسبقاً. يرجى اختيار موعد آخر.</div>
       </div>
 
       <div class="form-group">
@@ -96,37 +96,48 @@
 <footer>جميع الحقوق محفوظة © 2026 / عيادة كيوان لطب الأسنان</footer>
 
 <script>
-  // تحديد التاريخ الأدنى للسماح بالحجز من اليوم فصاعداً
   const dateInput = document.getElementById('appointmentDate');
+  const timeSelect = document.getElementById('appointmentTime');
   const errorMsg = document.getElementById('error-msg');
   const today = new Date().toISOString().split('T')[0];
   dateInput.setAttribute('min', today);
 
-  // التحقق عند اختيار التاريخ إذا كان يوم جمعة (Day 5)
-  dateInput.addEventListener('change', function() {
-    const selectedDate = new Date(this.value);
-    const dayOfWeek = selectedDate.getDay(); // 5 تعني يوم الجمعة
-    
-    if (dayOfWeek === 5) {
+  function validateSlot() {
+    const selectedDate = dateInput.value;
+    const selectedTime = timeSelect.value;
+
+    if (!selectedDate) return;
+
+    // 1. منع يوم الجمعة تلقائياً (Day 5)
+    const dateObj = new Date(selectedDate);
+    if (dateObj.getDay() === 5) {
+      errorMsg.innerText = "عذراً، العيادة مغلقة يوم الجمعة. يرجى اختيار يوم آخر.";
       errorMsg.style.display = 'block';
-      this.value = ''; // تفريغ الحقل تلقائياً لمنع الاختيار
-    } else {
-      errorMsg.style.display = 'none';
+      dateInput.value = '';
+      return;
     }
-  });
+
+    // 2. جلب الأوقات المحظورة المضافة من لوحة التحكم (Admin)
+    const blockedSlots = JSON.parse(localStorage.getItem('kiwan_blocked_slots')) || [];
+
+    if (selectedTime) {
+      const currentSlot = `${selectedDate}_${selectedTime}`;
+      if (blockedSlots.includes(currentSlot)) {
+        errorMsg.innerText = "عذراً، هذا الموعد غير متاح (محجوز مسبقاً أو لديك موعد شخصي فيه). يرجى اختيار وقت آخر.";
+        errorMsg.style.display = 'block';
+        timeSelect.value = '';
+        return;
+      }
+    }
+
+    errorMsg.style.display = 'none';
+  }
+
+  dateInput.addEventListener('change', validateSlot);
+  timeSelect.addEventListener('change', validateSlot);
 
   document.getElementById('bookingForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
-    const formData = {
-      name: document.getElementById('patientName').value,
-      birthYear: document.getElementById('birthYear').value,
-      phone: document.getElementById('phoneNumber').value,
-      complaint: document.getElementById('mainComplaint').value,
-      date: document.getElementById('appointmentDate').value,
-      time: document.getElementById('appointmentTime').value
-    };
-
     document.getElementById('bookingForm').style.display = 'none';
     document.getElementById('message-box').style.display = 'block';
   });
