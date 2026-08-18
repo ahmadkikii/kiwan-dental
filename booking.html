@@ -19,6 +19,7 @@
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #03263b; outline: none; }
     .btn-submit { width: 100%; padding: 15px; background: #03263b; color: #fff; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; font-family: 'Cairo', sans-serif; }
     .btn-submit:hover { background: #054a73; }
+    #error-msg { color: #d9534f; font-size: 0.9rem; margin-top: 5px; display: none; font-weight: 600; }
     #message-box { display: none; text-align: center; padding: 30px; background: #d4edda; color: #155724; border-radius: 8px; margin-top: 20px; font-size: 1.1rem; line-height: 1.8; }
   </style>
 </head>
@@ -61,8 +62,8 @@
 
       <div class="form-group">
         <label>اليوم المفضل *</label>
-        <!-- تم إضافة خاصية lang="ar" لضمان ظهور الروزنامة باللغة العربية حسب متصفح المريض -->
         <input type="date" id="appointmentDate" lang="ar" required>
+        <div id="error-msg">عذراً، العيادة مغلقة يوم الجمعة. يرجى اختيار يوم آخر.</div>
       </div>
 
       <div class="form-group">
@@ -96,8 +97,23 @@
 
 <script>
   // تحديد التاريخ الأدنى للسماح بالحجز من اليوم فصاعداً
+  const dateInput = document.getElementById('appointmentDate');
+  const errorMsg = document.getElementById('error-msg');
   const today = new Date().toISOString().split('T')[0];
-  document.getElementById('appointmentDate').setAttribute('min', today);
+  dateInput.setAttribute('min', today);
+
+  // التحقق عند اختيار التاريخ إذا كان يوم جمعة (Day 5)
+  dateInput.addEventListener('change', function() {
+    const selectedDate = new Date(this.value);
+    const dayOfWeek = selectedDate.getDay(); // 5 تعني يوم الجمعة
+    
+    if (dayOfWeek === 5) {
+      errorMsg.style.display = 'block';
+      this.value = ''; // تفريغ الحقل تلقائياً لمنع الاختيار
+    } else {
+      errorMsg.style.display = 'none';
+    }
+  });
 
   document.getElementById('bookingForm').addEventListener('submit', function(e) {
     e.preventDefault();
