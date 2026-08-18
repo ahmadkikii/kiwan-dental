@@ -62,10 +62,24 @@
       <div class="booking-card">
         <h3>حجز موعد في العيادة</h3>
         <p class="subtitle">أوقات العمل: من السبت إلى الخميس<br>(الساعات الكاملة من 9:00 صباحاً حتى 4:00 عصراً)</p>
-        <div class="form-group"><label>الاسم الكامل:</label><input type="text" id="visitorName" placeholder="أدخل اسمك الكريم"></div>
-        <div class="form-group"><label>رقم الهاتف:</label><input type="tel" id="visitorPhone" placeholder="مثال: 0956766617"></div>
-        <div class="form-group"><label>تاريخ الموعد:</label><input type="date" id="visitorDate"></div>
-        <div class="form-group"><label>اختر الساعة:</label>
+        
+        <div class="form-group">
+          <label>الاسم الكامل:</label>
+          <input type="text" id="visitorName" placeholder="أدخل اسمك الكريم">
+        </div>
+        
+        <div class="form-group">
+          <label>رقم الهاتف:</label>
+          <input type="tel" id="visitorPhone" placeholder="مثال: 0956766617">
+        </div>
+        
+        <div class="form-group">
+          <label>تاريخ الموعد:</label>
+          <input type="date" id="visitorDate">
+        </div>
+        
+        <div class="form-group">
+          <label>اختر الساعة:</label>
           <select id="visitorHour">
             <option value="">اختر ساعة الدوام</option>
             <option value="09">09:00 صباحاً</option>
@@ -78,9 +92,15 @@
             <option value="16">04:00 عصراً</option>
           </select>
         </div>
-        <div class="form-group"><label>سبب الزيارة:</label><input type="text" id="visitorNote" placeholder="مثال: كشف دوري"></div>
+        
+        <div class="form-group">
+          <label>سبب الزيارة:</label>
+          <input type="text" id="visitorNote" placeholder="مثال: كشف دوري">
+        </div>
+        
         <button class="booking-btn" onclick="sendBookingRequest()">تثبيت وإرسال حجز الموعد</button>
         <div id="booking-msg"></div>
+        
         <div class="back-home">
           <a href="index.html">← العودة إلى الصفحة الرئيسية</a>
         </div>
@@ -90,6 +110,10 @@
 </main>
 
 <script>
+  // تعيين الحد الأدنى لتاريخ الحجز ليصبح تاريخ اليوم تلقائياً لمنع اختيار التواريخ السابقة
+  const todayStr = new Date().toISOString().split('T')[0];
+  document.getElementById('visitorDate').setAttribute('min', todayStr);
+
   async function sendBookingRequest() {
       const name = document.getElementById('visitorName').value.trim();
       const phone = document.getElementById('visitorPhone').value.trim();
@@ -105,7 +129,23 @@
           return;
       }
 
-      const timeInput = dateInput + " " + hourInput + ":00";
+      // التحقق من أن التاريخ ليس في الماضي
+      if (dateInput < todayStr) {
+          msgDiv.style.color = "red";
+          msgDiv.innerText = "عذراً، لا يمكن الحجز في تاريخ سابق.";
+          return;
+      }
+
+      // التحقق من الوقت إذا كان الحجز في نفس اليوم لمنع اختيار ساعات مضت
+      if (dateInput === todayStr) {
+          const currentHour = new Date().getHours();
+          if (parseInt(hourInput) <= currentHour) {
+              msgDiv.style.color = "red";
+              msgDiv.innerText = "عذراً، لا يمكن الحجز في وقت مضى من اليوم الحالي.";
+              return;
+          }
+      }
+
       const selectedDate = new Date(dateInput);
       if (selectedDate.getDay() === 5) {
           msgDiv.style.color = "red";
@@ -113,6 +153,9 @@
           return;
       }
 
+      const timeInput = dateInput + " " + hourInput + ":00";
+
+      msgDiv.style.color = "#03263b";
       msgDiv.innerText = "جاري الحجز...";
       try {
           const response = await fetch(scriptUrl);
@@ -134,7 +177,10 @@
           document.getElementById('visitorDate').value = "";
           document.getElementById('visitorHour').value = "";
           document.getElementById('visitorNote').value = "";
-      } catch(err) { msgDiv.style.color = "red"; msgDiv.innerText = "حدث خطأ، يرجى المحاولة لاحقاً."; }
+      } catch(err) { 
+          msgDiv.style.color = "red"; 
+          msgDiv.innerText = "حدث خطأ، يرجى المحاولة لاحقاً."; 
+      }
   }
 </script>
 </body>
