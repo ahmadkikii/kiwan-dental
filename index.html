@@ -50,8 +50,8 @@
     .booking-card p.subtitle { text-align: center; color: #666; font-size: 0.95rem; margin-bottom: 25px; }
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.95rem; color: #2c3e50; }
-    .form-group input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; font-size: 1rem; outline: none; transition: border-color 0.2s; font-family: inherit; }
-    .form-group input:focus { border-color: #27ae60; box-shadow: 0 0 5px rgba(39, 174, 96, 0.2); }
+    .form-group input, .form-group select { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; font-size: 1rem; outline: none; transition: border-color 0.2s; font-family: inherit; background: #fff; }
+    .form-group input:focus, .form-group select:focus { border-color: #27ae60; box-shadow: 0 0 5px rgba(39, 174, 96, 0.2); }
     .booking-btn { width: 100%; background: #27ae60; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: background 0.2s; font-family: inherit; }
     .booking-btn:hover { background: #219653; }
     #booking-msg { margin-top: 15px; text-align: center; font-size: 1rem; font-weight: bold; }
@@ -222,7 +222,7 @@
     <div class="container">
       <div class="booking-card">
         <h3>حجز موعد في العيادة</h3>
-        <p class="subtitle">أوقات العمل: من السبت إلى الخميس (من 9:00 صباحاً حتى 5:00 مساءً)</p>
+        <p class="subtitle">أوقات العمل: من السبت إلى الخميس (الساعات الكاملة من 9:00 صباحاً حتى 4:00 عصراً)</p>
         
         <div class="form-group">
           <label>الاسم الكامل:</label>
@@ -235,8 +235,23 @@
         </div>
 
         <div class="form-group">
-          <label>وقت الموعد المرغوب:</label>
-          <input type="datetime-local" id="visitorTime" step="3600">
+          <label>اختر تاريخ الموعد:</label>
+          <input type="date" id="visitorDate">
+        </div>
+
+        <div class="form-group">
+          <label>اختر الساعة:</label>
+          <select id="visitorHour">
+            <option value="">اختر ساعة الدوام</option>
+            <option value="09">09:00 صباحاً</option>
+            <option value="10">10:00 صباحاً</option>
+            <option value="11">11:00 صباحاً</option>
+            <option value="12">12:00 ظهراً</option>
+            <option value="13">01:00 ظهراً</option>
+            <option value="14">02:00 عصراً</option>
+            <option value="15">03:00 عصراً</option>
+            <option value="16">04:00 عصراً</option>
+          </select>
         </div>
         
         <div class="form-group">
@@ -315,36 +330,32 @@
       document.getElementById('index-cases-slider').innerHTML = '<p style="width: 100%; text-align: center; color: #e74c3c;">تعذر تحميل الحالات.</p>';
     });
 
-  // كود إرسال الحجز الآمن (مع الرابط الجديد)
+  // كود إرسال الحجز بالساعات الكاملة
   async function sendBookingRequest() {
       const name = document.getElementById('visitorName').value.trim();
       const phone = document.getElementById('visitorPhone').value.trim();
-      const timeInput = document.getElementById('visitorTime').value;
+      const dateInput = document.getElementById('visitorDate').value;
+      const hourInput = document.getElementById('visitorHour').value;
       const msgDiv = document.getElementById('booking-msg');
       
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbyrDBdSoN4XzQ3MQqZhtClOjrU7dBtK5R6W5i223kFr6cA-jbkO2DVIG_F_OzQ9UjCu/exec"; 
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbwnNMaIkBsfHKml7SG6uJw1PWw7NNGS_8_NPV9Vmgesk1Je9gUUVAdpwmQhZdrgrgG5/exec"; 
 
-      if(!name || !phone || !timeInput) {
+      if(!name || !phone || !dateInput || !hourInput) {
           msgDiv.style.color = "red";
-          msgDiv.innerText = "الرجاء تعبئة كافة الحقول.";
+          msgDiv.innerText = "الرجاء تعبئة كافة الحقول واختيار التاريخ والساعة.";
           return;
       }
 
-      const selectedDate = new Date(timeInput);
+      // تجميع الصيغة بالشكل: YYYY-MM-DD HH:00 للتخزين والمقارنة الدقيقة
+      const timeInput = dateInput + " " + hourInput + ":00";
+
+      const selectedDate = new Date(dateInput);
       const day = selectedDate.getDay(); 
-      const hour = selectedDate.getHours();
 
       // منع يوم الجمعة (الجمعة هو 5)
       if (day === 5) {
           msgDiv.style.color = "red";
           msgDiv.innerText = "عذراً، العيادة مغلقة يوم الجمعة.";
-          return;
-      }
-
-      // التحقق من ساعات الدوام (من 9 صباحاً حتى 5 مساءً)
-      if (hour < 9 || hour >= 17) {
-          msgDiv.style.color = "red";
-          msgDiv.innerText = "عذراً، أوقات العمل من 9 صباحاً حتى 5 مساءً.";
           return;
       }
 
@@ -376,7 +387,8 @@
           msgDiv.innerText = "تم حجز موعدك بنجاح!";
           document.getElementById('visitorName').value = "";
           document.getElementById('visitorPhone').value = "";
-          document.getElementById('visitorTime').value = "";
+          document.getElementById('visitorDate').value = "";
+          document.getElementById('visitorHour').value = "";
           document.getElementById('visitorNote').value = "";
 
       } catch(err) {
