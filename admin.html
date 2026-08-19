@@ -1,349 +1,2164 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>لوحة إدارة حالات عيادة كيوان</title>
+
     <style>
-        body { font-family: system-ui, sans-serif; padding: 20px; background: #f4f7f6; color: #333; }
-        .container { max-width: 950px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        h2, h3 { color: #03263b; }
-        .stats-box { background: #eef2f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem; line-height: 1.6; }
-        .category-group { margin-bottom: 25px; background: #fafafa; border: 1px solid #e1e8ed; border-radius: 8px; padding: 15px; }
-        .category-title { font-size: 1.1rem; color: #2980b9; margin-bottom: 10px; border-bottom: 2px solid #e1e8ed; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
-        .case-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; gap: 12px; background: white; margin-bottom: 8px; border-radius: 6px; }
-        .case-item:last-child { margin-bottom: 0; }
-        .case-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #ccc; cursor: pointer; transition: transform 0.2s; flex-shrink: 0; }
-        .case-thumb:hover { transform: scale(1.05); }
-        .case-info { flex-grow: 1; font-size: 0.95rem; }
-        .btn-group { display: flex; gap: 5px; flex-shrink: 0; }
-        .delete-btn { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-        .edit-btn { background: #f39c12; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-        input, select, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; font-family: inherit; }
-        .primary-btn { background: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; font-size: 1rem; }
-        .primary-btn:hover { background: #2980b9; }
-        .token-box { background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #e1e8ed; text-align: center; }
-        hr { margin: 30px 0; border: 0; border-top: 1px solid #eee; }
-        .loading { text-align: center; color: #666; padding: 20px; }
-        .section-box { background: #fdfdfd; border: 1px solid #dcdcdc; padding: 20px; border-radius: 10px; margin-bottom: 30px; }
+
+        body {
+            font-family: system-ui, sans-serif;
+            padding: 20px;
+            background: #f4f7f6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2,
+        h3 {
+            color: #03263b;
+        }
+
+        .stats-box {
+            background: #eef2f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .category-group {
+            margin-bottom: 25px;
+            background: #fafafa;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            color: #2980b9;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #e1e8ed;
+            padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .case-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 6px;
+        }
+
+        .case-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .case-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .case-thumb:hover {
+            transform: scale(1.05);
+        }
+
+        .case-info {
+            flex-grow: 1;
+            font-size: 0.95rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .edit-btn {
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .primary-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .primary-btn:hover {
+            background: #2980b9;
+        }
+
+        .token-box {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+            text-align: center;
+        }
+
+        hr {
+            margin: 30px 0;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+
+        .section-box {
+            background: #fdfdfd;
+            border: 1px solid #dcdcdc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        /* =========================
+           قسم الأوقات المغلقة
+           ========================= */
+
+        .blocked-section {
+            background: #fffaf5;
+            border: 1px solid #f0d6b8;
+        }
+
+        .blocked-title {
+            color: #c0392b;
+        }
+
+        .blocked-form {
+            background: #ffffff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .blocked-form label {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .blocked-add-btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .blocked-add-btn:hover {
+            background: #d35400;
+        }
+
+        .blocked-item {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .blocked-info {
+            flex: 1;
+            line-height: 1.7;
+        }
+
+        .blocked-remove-btn {
+            width: auto;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 7px 12px;
+            margin: 0;
+        }
+
+        .blocked-empty {
+            color: #777;
+            text-align: center;
+            padding: 15px;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .case-item {
+                flex-wrap: wrap;
+            }
+
+            .btn-group {
+                width: 100%;
+            }
+
+            .btn-group button {
+                flex: 1;
+            }
+
+            .blocked-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .blocked-remove-btn {
+                width: 100%;
+            }
+        }
+
     </style>
+
 </head>
+
 <body>
-    <div class="container">
-        <h2>لوحة إدارة عيادة كيوان</h2>
-        
-        <!-- قسم تسجيل الدخول بالتوكن -->
-        <div id="auth-section" class="token-box">
-            <h3>تسجيل الدخول للوحة الإدارة</h3>
-            <p style="color: #666; font-size: 0.9rem;">الرجاء إدخال رمز الوصول الشخصي (GitHub Personal Access Token) للمتابعة:</p>
-            <input type="password" id="token" placeholder="الصق الرمز هنا (ghp_...)">
-            <button class="primary-btn" onclick="loginAndLoad()">دخول وإدارة البيانات</button>
-        </div>
 
-        <!-- المحتوى المخفي حتى يتم تسجيل الدخول -->
-        <div id="admin-content" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #eef2f5; padding: 10px 15px; border-radius: 6px; margin-bottom: 20px;">
-                <span style="color: #27ae60; font-weight: bold;">✓ متصل بالمستودع بنجاح</span>
-                <button onclick="logout()" style="width: auto; margin: 0; background: #7f8c8d; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">تسجيل الخروج / تغيير الرمز</button>
-            </div>
+<div class="container">
 
-            <!-- قسم إدارة الحالات الطبية -->
-            <div class="section-box">
-                <h3>🦷 الحالات الطبية الحالية المرفوعة:</h3>
-                <div id="cases-list" class="loading">جاري جلب الحالات...</div>
+    <h2>لوحة إدارة عيادة كيوان</h2>
 
-                <hr>
+    <!-- تسجيل الدخول -->
 
-                <h3 id="form-title">إضافة حالة جديدة:</h3>
-                <input type="hidden" id="editIndex" value="-1">
-                <input type="hidden" id="editFileName" value="">
-                
-                <input type="text" id="newTitle" placeholder="وصف الحالة (مثال: علاج جذور وترميم سفلي...)">
-                
-                <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">اختر القسم:</label>
-                <select id="newCategory">
-                    <option value="المداواة اللبية">المداواة اللبية</option>
-                    <option value="المداواة الترميمية">المداواة الترميمية</option>
-                    <option value="تجميل الأسنان">تجميل الأسنان</option>
-                    <option value="زرع الأسنان">زرع الأسنان</option>
-                    <option value="تقويم الأسنان">تقويم الأسنان</option>
-                    <option value="حالات أخرى">حالات أخرى</option>
-                </select>
-                
-                <label style="display:block; margin-top:10px; font-size: 0.9rem; color:#555;">صورة الحالة:</label>
-                <input type="file" id="newFile">
-                
-                <button class="primary-btn" id="save-btn" onclick="saveCase()">رفع وإضافة الحالة</button>
-                <button id="cancel-edit-btn" style="display:none; background:#95a5a6; color:white; border:none; cursor:pointer;" onclick="resetForm()">إلغاء التعديل</button>
-            </div>
-        </div>
+    <div id="auth-section"
+         class="token-box">
+
+        <h3>تسجيل الدخول للوحة الإدارة</h3>
+
+        <p style="color:#666;font-size:0.9rem;">
+            الرجاء إدخال رمز الوصول الشخصي
+            (GitHub Personal Access Token)
+            للمتابعة:
+        </p>
+
+        <input type="password"
+               id="token"
+               placeholder="الصق الرمز هنا (ghp_...)">
+
+        <button class="primary-btn"
+                onclick="loginAndLoad()">
+            دخول وإدارة البيانات
+        </button>
+
     </div>
 
-    <script>
-        const repo = "ahmadkikii/kiwan-dental";
-        
-        window.onload = function() {
-            const savedToken = localStorage.getItem('ghToken');
-            if(savedToken) {
-                document.getElementById('token').value = savedToken;
-                loginAndLoad();
-            }
+
+    <!-- المحتوى -->
+
+    <div id="admin-content"
+         style="display:none;">
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            background:#eef2f5;
+            padding:10px 15px;
+            border-radius:6px;
+            margin-bottom:20px;
+        ">
+
+            <span style="
+                color:#27ae60;
+                font-weight:bold;
+            ">
+                ✓ متصل بالمستودع بنجاح
+            </span>
+
+            <button onclick="logout()"
+                    style="
+                        width:auto;
+                        margin:0;
+                        background:#7f8c8d;
+                        color:white;
+                        border:none;
+                        padding:5px 12px;
+                        border-radius:4px;
+                        cursor:pointer;
+                        font-size:0.85rem;
+                    ">
+                تسجيل الخروج / تغيير الرمز
+            </button>
+
+        </div>
+
+
+        <!-- =========================================
+             قسم الأوقات المغلقة الجديد
+             ========================================= -->
+
+        <div class="section-box blocked-section">
+
+            <h3 class="blocked-title">
+                🔒 إغلاق أوقات للحجز
+            </h3>
+
+            <p style="
+                color:#666;
+                font-size:0.9rem;
+                line-height:1.7;
+            ">
+                استخدم هذا القسم لإغلاق ساعات محددة في يوم معين
+                لمرة واحدة فقط.
+                <br>
+                مثال: إذا أغلقت من 01:00 إلى 04:00،
+                فلن يستطيع الزوار حجز ساعات 01:00 و02:00 و03:00 و04:00
+                في ذلك اليوم.
+            </p>
+
+
+            <div class="blocked-form">
+
+                <label for="blockedDate">
+                    تاريخ الإغلاق:
+                </label>
+
+                <input type="date"
+                       id="blockedDate">
+
+
+                <label for="blockedFrom">
+                    من الساعة:
+                </label>
+
+                <select id="blockedFrom">
+
+                    <option value="">اختر الساعة</option>
+
+                    <option value="09">09:00 صباحاً</option>
+                    <option value="10">10:00 صباحاً</option>
+                    <option value="11">11:00 صباحاً</option>
+                    <option value="12">12:00 ظهراً</option>
+                    <option value="13">01:00 ظهراً</option>
+                    <option value="14">02:00 عصراً</option>
+                    <option value="15">03:00 عصراً</option>
+                    <option value="16">04:00 عصراً</option>
+
+                </select>
+
+
+                <label for="blockedTo">
+                    إلى الساعة:
+                </label>
+
+                <select id="blockedTo">
+
+                    <option value="">اختر الساعة</option>
+
+                    <option value="09">09:00 صباحاً</option>
+                    <option value="10">10:00 صباحاً</option>
+                    <option value="11">11:00 صباحاً</option>
+                    <option value="12">12:00 ظهراً</option>
+                    <option value="13">01:00 ظهراً</option>
+                    <option value="14">02:00 عصراً</option>
+                    <option value="15">03:00 عصراً</option>
+                    <option value="16">04:00 عصراً</option>
+
+                </select>
+
+
+                <button class="blocked-add-btn"
+                        onclick="addBlockedPeriod()">
+                    🔒 إغلاق الأوقات المحددة
+                </button>
+
+            </div>
+
+
+            <h3 style="margin-top:25px;">
+                الأوقات المغلقة حالياً:
+            </h3>
+
+            <div id="blocked-list">
+                جاري جلب الأوقات المغلقة...
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             قسم الحالات الطبية الأصلي
+             ========================================= -->
+
+        <div class="section-box">
+
+            <h3>
+                🦷 الحالات الطبية الحالية المرفوعة:
+            </h3>
+
+            <div id="cases-list"
+                 class="loading">
+                جاري جلب الحالات...
+            </div>
+
+
+            <hr>
+
+
+            <h3 id="form-title">
+                إضافة حالة جديدة:
+            </h3>
+
+            <input type="hidden"
+                   id="editIndex"
+                   value="-1">
+
+            <input type="hidden"
+                   id="editFileName"
+                   value="">
+
+
+            <input type="text"
+                   id="newTitle"
+                   placeholder="وصف الحالة (مثال: علاج جذور وترميم سفلي...)">
+
+
+            <label style="
+                display:block;
+                margin-top:10px;
+                font-size:0.9rem;
+                color:#555;
+            ">
+                اختر القسم:
+            </label>
+
+            <select id="newCategory">
+
+                <option value="المداواة اللبية">
+                    المداواة اللبية
+                </option>
+
+                <option value="المداواة الترميمية">
+                    المداواة الترميمية
+                </option>
+
+                <option value="تجميل الأسنان">
+                    تجميل الأسنان
+                </option>
+
+                <option value="زرع الأسنان">
+                    زرع الأسنان
+                </option>
+
+                <option value="تقويم الأسنان">
+                    تقويم الأسنان
+                </option>
+
+                <option value="حالات أخرى">
+                    حالات أخرى
+                </option>
+
+            </select>
+
+
+            <label style="
+                display:block;
+                margin-top:10px;
+                font-size:0.9rem;
+                color:#555;
+            ">
+                صورة الحالة:
+            </label>
+
+            <input type="file"
+                   id="newFile">
+
+
+            <button class="primary-btn"
+                    id="save-btn"
+                    onclick="saveCase()">
+                رفع وإضافة الحالة
+            </button>
+
+
+            <button id="cancel-edit-btn"
+                    style="
+                        display:none;
+                        background:#95a5a6;
+                        color:white;
+                        border:none;
+                        cursor:pointer;
+                    "
+                    onclick="resetForm()">
+                إلغاء التعديل
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const repo = "ahmadkikii/kiwan-dental";
+
+    /*
+     * ملف الأوقات المغلقة
+     */
+    const blockedFilePath =
+        "assets/blocked-times.json";
+
+
+    /*
+     * تسجيل الدخول
+     */
+    window.onload = function() {
+
+        const savedToken =
+            localStorage.getItem('ghToken');
+
+        if(savedToken) {
+
+            document.getElementById('token').value =
+                savedToken;
+
+            loginAndLoad();
+
+        }
+
+    };
+
+
+    function loginAndLoad() {
+
+        const token =
+            document.getElementById('token').value.trim();
+
+        if(!token) {
+
+            alert("الرجاء إدخال رمز الوصول أولاً.");
+
+            return;
+        }
+
+        localStorage.setItem('ghToken', token);
+
+        document.getElementById('auth-section').style.display =
+            'none';
+
+        document.getElementById('admin-content').style.display =
+            'block';
+
+        loadCases();
+
+        loadBlockedTimes();
+
+    }
+
+
+    function logout() {
+
+        localStorage.removeItem('ghToken');
+
+        document.getElementById('token').value = '';
+
+        document.getElementById('admin-content').style.display =
+            'none';
+
+        document.getElementById('auth-section').style.display =
+            'block';
+
+    }
+
+
+    /*
+     * =========================================
+     * إدارة الأوقات المغلقة
+     * =========================================
+     */
+
+
+    function getHourText(hour) {
+
+        const h =
+            parseInt(hour, 10);
+
+        if(h === 12) {
+            return "12:00 ظهراً";
+        }
+
+        if(h > 12) {
+            return String(h - 12).padStart(2, '0') +
+                   ":00 عصراً";
+        }
+
+        return String(h).padStart(2, '0') +
+               ":00 صباحاً";
+    }
+
+
+    function getLocalDateString() {
+
+        const now = new Date();
+
+        const year =
+            now.getFullYear();
+
+        const month =
+            String(now.getMonth() + 1).padStart(2, '0');
+
+        const day =
+            String(now.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+
+    }
+
+
+    /*
+     * قراءة ملف blocked-times.json
+     */
+    async function getBlockedFile() {
+
+        const token =
+            localStorage.getItem('ghToken');
+
+        const response =
+            await fetch(
+                `https://api.github.com/repos/${repo}/contents/${blockedFilePath}`,
+                {
+                    headers: {
+                        'Authorization': `token ${token}`
+                    }
+                }
+            );
+
+
+        if(response.status === 404) {
+
+            return {
+                exists: false,
+                data: [],
+                sha: null
+            };
+
+        }
+
+
+        if(!response.ok) {
+
+            throw new Error(
+                "تعذر قراءة ملف الأوقات المغلقة."
+            );
+
+        }
+
+
+        const fileData =
+            await response.json();
+
+
+        let decoded = [];
+
+        try {
+
+            decoded =
+                JSON.parse(
+                    decodeURIComponent(
+                        escape(
+                            atob(fileData.content)
+                        )
+                    )
+                );
+
+        } catch(e) {
+
+            decoded = [];
+
+        }
+
+
+        if(!Array.isArray(decoded)) {
+            decoded = [];
+        }
+
+
+        return {
+            exists: true,
+            data: decoded,
+            sha: fileData.sha
         };
 
-        function loginAndLoad() {
-            const token = document.getElementById('token').value.trim();
-            if(!token) {
-                alert("الرجاء إدخال رمز الوصول أولاً.");
+    }
+
+
+    /*
+     * حفظ ملف الأوقات المغلقة
+     */
+    async function saveBlockedFile(data, sha) {
+
+        const token =
+            localStorage.getItem('ghToken');
+
+
+        const jsonText =
+            JSON.stringify(data, null, 2);
+
+
+        const content =
+            btoa(
+                unescape(
+                    encodeURIComponent(jsonText)
+                )
+            );
+
+
+        const body = {
+
+            message:
+                "Update blocked booking times",
+
+            content:
+                content
+
+        };
+
+
+        if(sha) {
+            body.sha = sha;
+        }
+
+
+        const response =
+            await fetch(
+                `https://api.github.com/repos/${repo}/contents/${blockedFilePath}`,
+                {
+                    method: 'PUT',
+
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+
+                    body: JSON.stringify(body)
+                }
+            );
+
+
+        if(!response.ok) {
+
+            throw new Error(
+                "فشل حفظ الأوقات المغلقة."
+            );
+
+        }
+
+
+        return await response.json();
+
+    }
+
+
+    /*
+     * عرض الأوقات المغلقة
+     */
+    async function loadBlockedTimes() {
+
+        const listDiv =
+            document.getElementById('blocked-list');
+
+
+        listDiv.innerHTML =
+            "جاري جلب الأوقات المغلقة...";
+
+
+        try {
+
+            const result =
+                await getBlockedFile();
+
+
+            const data =
+                result.data;
+
+
+            if(data.length === 0) {
+
+                listDiv.innerHTML =
+                    '<div class="blocked-empty">' +
+                    'لا توجد أوقات مغلقة حالياً.' +
+                    '</div>';
+
                 return;
+
             }
-            localStorage.setItem('ghToken', token);
-            document.getElementById('auth-section').style.display = 'none';
-            document.getElementById('admin-content').style.display = 'block';
-            loadCases();
-        }
 
-        function logout() {
-            localStorage.removeItem('ghToken');
-            document.getElementById('token').value = '';
-            document.getElementById('admin-content').style.display = 'none';
-            document.getElementById('auth-section').style.display = 'block';
-        }
-        
-        function formatBytes(bytes) {
-            if (bytes === 0) return '0 بايت';
-            const k = 1024;
-            const sizes = ['بايت', 'كيلوبايت', 'ميغابايت'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-        
-        // --- دوال إدارة الحالات الطبية ---
-        async function loadCases() {
-            const token = localStorage.getItem('ghToken');
-            try {
-                const res = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
-                if(!res.ok) {
-                    if(res.status === 401) { logout(); return; }
-                    document.getElementById('cases-list').innerHTML = "لا توجد حالات حالياً أو ملف القائمة غير موجود.";
-                    return;
-                }
-                const data = await res.json();
-                const content = decodeURIComponent(escape(atob(data.content)));
-                const lines = content.split('\n').filter(l => l.trim());
-                
-                const listDiv = document.getElementById('cases-list');
-                if(lines.length === 0) {
-                    listDiv.innerHTML = "لا توجد حالات مسجلة حالياً.";
-                    return;
-                }
 
-                const folderRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases`, { headers: { 'Authorization': `token ${token}` }});
-                const folderData = folderRes.ok ? await folderRes.json() : [];
-                const fileSizes = {};
-                if(Array.isArray(folderData)) {
-                    folderData.forEach(f => { fileSizes[f.name] = f.size || 0; });
-                }
-                
-                const categories = {
-                    "المداواة اللبية": [], "المداواة الترميمية": [], "تجميل الأسنان": [],
-                    "زرع الأسنان": [], "تقويم الأسنان": [], "حالات أخرى": []
-                };
+            /*
+             * ترتيب حسب التاريخ
+             */
+            data.sort(function(a, b) {
 
-                let totalGlobalSize = 0;
+                return a.date.localeCompare(b.date);
 
-                lines.forEach((line, index) => {
-                    const parts = line.split('|');
-                    const file = parts[0].trim();
-                    const cat = parts[1] ? parts[1].trim() : 'حالات أخرى';
-                    const title = parts[2] ? parts[2].trim() : (parts[1] ? parts[1].trim() : 'بدون عنوان');
-                    const size = fileSizes[file] || 0;
-                    totalGlobalSize += size;
+            });
 
-                    let formattedDate = "تاريخ غير معروف";
-                    const match = file.match(/case-(\d+)\.jpg/);
-                    if (match && match[1]) {
-                        const dateObj = new Date(parseInt(match[1], 10));
-                        if (!isNaN(dateObj.getTime())) {
-                            formattedDate = dateObj.toLocaleString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                        }
-                    }
-                    
-                    const caseObj = { index, file, cat, title, size, formattedDate };
-                    if(categories[cat]) { categories[cat].push(caseObj); } 
-                    else { categories["حالات أخرى"].push(caseObj); }
-                });
 
-                let htmlContent = `
-                    <div class="stats-box">
-                        <strong>📊 إحصائيات عامة:</strong><br>
-                        • <strong>عدد الحالات الكلي:</strong> ${lines.length} حالة<br>
-                        • <strong>المساحة الإجمالية لجميع الحالات:</strong> ${formatBytes(totalGlobalSize)}
+            let html = "";
+
+
+            data.forEach(function(item, index) {
+
+                const hours =
+                    Array.isArray(item.hours)
+                    ? item.hours
+                    : [];
+
+
+                let hoursText =
+                    hours.map(getHourText).join("، ");
+
+
+                html += `
+
+                    <div class="blocked-item">
+
+                        <div class="blocked-info">
+
+                            <strong>
+                                📅 ${item.date}
+                            </strong>
+
+                            <br>
+
+                            <span>
+                                🔒 ${hoursText}
+                            </span>
+
+                        </div>
+
+                        <button
+                            class="blocked-remove-btn"
+                            onclick="removeBlockedPeriod(${index})">
+                            حذف الإغلاق
+                        </button>
+
                     </div>
+
                 `;
 
-                for (const [catName, casesArray] of Object.entries(categories)) {
-                    if(casesArray.length > 0) {
-                        const catTotalSize = casesArray.reduce((sum, c) => sum + c.size, 0);
+            });
+
+
+            listDiv.innerHTML = html;
+
+
+        } catch(error) {
+
+            listDiv.innerHTML =
+                '<div style="color:red;text-align:center;padding:15px;">' +
+                'حدث خطأ أثناء جلب الأوقات المغلقة.' +
+                '</div>';
+
+        }
+
+    }
+
+
+    /*
+     * إضافة فترة إغلاق
+     */
+    async function addBlockedPeriod() {
+
+        const date =
+            document.getElementById('blockedDate').value;
+
+        const from =
+            document.getElementById('blockedFrom').value;
+
+        const to =
+            document.getElementById('blockedTo').value;
+
+
+        if(!date || !from || !to) {
+
+            alert(
+                "الرجاء اختيار التاريخ وساعة البداية وساعة النهاية."
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * منع إضافة تاريخ قديم
+         */
+        if(date < getLocalDateString()) {
+
+            alert(
+                "لا يمكن إغلاق أوقات في تاريخ سابق."
+            );
+
+            return;
+
+        }
+
+
+        const fromNumber =
+            parseInt(from, 10);
+
+        const toNumber =
+            parseInt(to, 10);
+
+
+        if(fromNumber > toNumber) {
+
+            alert(
+                "ساعة البداية يجب أن تكون قبل أو مساوية لساعة النهاية."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            const result =
+                await getBlockedFile();
+
+
+            const data =
+                result.data;
+
+
+            /*
+             * إنشاء قائمة الساعات
+             * من البداية إلى النهاية بشكل شامل
+             */
+            const hours = [];
+
+            for(
+                let hour = fromNumber;
+                hour <= toNumber;
+                hour++
+            ) {
+
+                hours.push(
+                    String(hour).padStart(2, '0')
+                );
+
+            }
+
+
+            /*
+             * البحث عن نفس التاريخ
+             */
+            const existing =
+                data.find(function(item) {
+
+                    return item.date === date;
+
+                });
+
+
+            if(existing) {
+
+                if(!Array.isArray(existing.hours)) {
+                    existing.hours = [];
+                }
+
+
+                hours.forEach(function(hour) {
+
+                    if(!existing.hours.includes(hour)) {
+
+                        existing.hours.push(hour);
+
+                    }
+
+                });
+
+
+                existing.hours.sort(
+                    (a, b) =>
+                        parseInt(a, 10) -
+                        parseInt(b, 10)
+                );
+
+
+            } else {
+
+                data.push({
+
+                    date: date,
+
+                    hours: hours
+
+                });
+
+            }
+
+
+            /*
+             * منع تكرار البيانات وترتيبها
+             */
+            data.forEach(function(item) {
+
+                if(Array.isArray(item.hours)) {
+
+                    item.hours =
+                        [...new Set(item.hours)];
+
+                    item.hours.sort(
+                        (a, b) =>
+                            parseInt(a, 10) -
+                            parseInt(b, 10)
+                    );
+
+                }
+
+            });
+
+
+            data.sort(function(a, b) {
+
+                return a.date.localeCompare(b.date);
+
+            });
+
+
+            await saveBlockedFile(
+                data,
+                result.sha
+            );
+
+
+            alert(
+                "تم إغلاق الأوقات المحددة بنجاح."
+            );
+
+
+            document.getElementById('blockedDate').value = "";
+            document.getElementById('blockedFrom').value = "";
+            document.getElementById('blockedTo').value = "";
+
+
+            loadBlockedTimes();
+
+
+        } catch(error) {
+
+            alert(
+                "حدث خطأ أثناء حفظ الإغلاق."
+            );
+
+        }
+
+    }
+
+
+    /*
+     * حذف إغلاق
+     */
+    async function removeBlockedPeriod(index) {
+
+        if(!confirm(
+            "هل أنت متأكد من حذف هذا الإغلاق؟"
+        )) {
+
+            return;
+
+        }
+
+
+        try {
+
+            const result =
+                await getBlockedFile();
+
+
+            const data =
+                result.data;
+
+
+            if(index < 0 || index >= data.length) {
+
+                return;
+
+            }
+
+
+            data.splice(index, 1);
+
+
+            await saveBlockedFile(
+                data,
+                result.sha
+            );
+
+
+            alert(
+                "تم حذف الإغلاق بنجاح."
+            );
+
+
+            loadBlockedTimes();
+
+
+        } catch(error) {
+
+            alert(
+                "حدث خطأ أثناء حذف الإغلاق."
+            );
+
+        }
+
+    }
+
+
+    /*
+     * =========================================
+     * إدارة الحالات الطبية - النظام الأصلي
+     * =========================================
+     */
+
+
+    function formatBytes(bytes) {
+
+        if(bytes === 0) {
+            return '0 بايت';
+        }
+
+        const k = 1024;
+
+        const sizes = [
+            'بايت',
+            'كيلوبايت',
+            'ميغابايت'
+        ];
+
+        const i =
+            Math.floor(
+                Math.log(bytes) /
+                Math.log(k)
+            );
+
+        return parseFloat(
+            (
+                bytes /
+                Math.pow(k, i)
+            ).toFixed(2)
+        ) +
+        ' ' +
+        sizes[i];
+
+    }
+
+
+    async function loadCases() {
+
+        const token =
+            localStorage.getItem('ghToken');
+
+
+        try {
+
+            const res =
+                await fetch(
+                    `https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`,
+                    {
+                        headers: {
+                            'Authorization': `token ${token}`
+                        }
+                    }
+                );
+
+
+            if(!res.ok) {
+
+                if(res.status === 401) {
+
+                    logout();
+
+                    return;
+
+                }
+
+                document.getElementById('cases-list').innerHTML =
+                    "لا توجد حالات حالياً أو ملف القائمة غير موجود.";
+
+                return;
+
+            }
+
+
+            const data =
+                await res.json();
+
+
+            const content =
+                decodeURIComponent(
+                    escape(
+                        atob(data.content)
+                    )
+                );
+
+
+            const lines =
+                content
+                .split('\n')
+                .filter(l => l.trim());
+
+
+            const listDiv =
+                document.getElementById('cases-list');
+
+
+            if(lines.length === 0) {
+
+                listDiv.innerHTML =
+                    "لا توجد حالات مسجلة حالياً.";
+
+                return;
+
+            }
+
+
+            const folderRes =
+                await fetch(
+                    `https://api.github.com/repos/${repo}/contents/assets/cases`,
+                    {
+                        headers: {
+                            'Authorization': `token ${token}`
+                        }
+                    }
+                );
+
+
+            const folderData =
+                folderRes.ok
+                ? await folderRes.json()
+                : [];
+
+
+            const fileSizes = {};
+
+
+            if(Array.isArray(folderData)) {
+
+                folderData.forEach(function(f) {
+
+                    fileSizes[f.name] =
+                        f.size || 0;
+
+                });
+
+            }
+
+
+            const categories = {
+
+                "المداواة اللبية": [],
+                "المداواة الترميمية": [],
+                "تجميل الأسنان": [],
+                "زرع الأسنان": [],
+                "تقويم الأسنان": [],
+                "حالات أخرى": []
+
+            };
+
+
+            let totalGlobalSize = 0;
+
+
+            lines.forEach(function(line, index) {
+
+                const parts =
+                    line.split('|');
+
+
+                const file =
+                    parts[0].trim();
+
+
+                const cat =
+                    parts[1]
+                    ? parts[1].trim()
+                    : 'حالات أخرى';
+
+
+                const title =
+                    parts[2]
+                    ? parts[2].trim()
+                    : (
+                        parts[1]
+                        ? parts[1].trim()
+                        : 'بدون عنوان'
+                    );
+
+
+                const size =
+                    fileSizes[file] || 0;
+
+
+                totalGlobalSize += size;
+
+
+                let formattedDate =
+                    "تاريخ غير معروف";
+
+
+                const match =
+                    file.match(
+                        /case-(\d+)\.jpg/
+                    );
+
+
+                if(match && match[1]) {
+
+                    const dateObj =
+                        new Date(
+                            parseInt(
+                                match[1],
+                                10
+                            )
+                        );
+
+
+                    if(!isNaN(
+                        dateObj.getTime()
+                    )) {
+
+                        formattedDate =
+                            dateObj.toLocaleString(
+                                'ar-EG',
+                                {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }
+                            );
+
+                    }
+
+                }
+
+
+                const caseObj = {
+
+                    index,
+                    file,
+                    cat,
+                    title,
+                    size,
+                    formattedDate
+
+                };
+
+
+                if(categories[cat]) {
+
+                    categories[cat].push(
+                        caseObj
+                    );
+
+                } else {
+
+                    categories["حالات أخرى"].push(
+                        caseObj
+                    );
+
+                }
+
+            });
+
+
+            let htmlContent = `
+
+                <div class="stats-box">
+
+                    <strong>
+                        📊 إحصائيات عامة:
+                    </strong>
+
+                    <br>
+
+                    • <strong>
+                        عدد الحالات الكلي:
+                      </strong>
+                    ${lines.length} حالة
+
+                    <br>
+
+                    • <strong>
+                        المساحة الإجمالية لجميع الحالات:
+                      </strong>
+                    ${formatBytes(totalGlobalSize)}
+
+                </div>
+
+            `;
+
+
+            for(
+                const [catName, casesArray]
+                of Object.entries(categories)
+            ) {
+
+                if(casesArray.length > 0) {
+
+                    const catTotalSize =
+                        casesArray.reduce(
+                            (sum, c) =>
+                                sum + c.size,
+                            0
+                        );
+
+
+                    htmlContent += `
+
+                        <div class="category-group">
+
+                            <div class="category-title">
+
+                                <span>
+                                    📂 ${catName}
+                                    (${casesArray.length} حالة)
+                                </span>
+
+                                <small style="
+                                    color:#666;
+                                    font-size:0.85rem;
+                                ">
+                                    مساحة القسم:
+                                    ${formatBytes(catTotalSize)}
+                                </small>
+
+                            </div>
+
+                    `;
+
+
+                    casesArray.forEach(function(c) {
+
+                        const imgSrc =
+                            `assets/cases/${c.file}`;
+
+
                         htmlContent += `
-                            <div class="category-group">
-                                <div class="category-title">
-                                    <span>📂 ${catName} (${casesArray.length} حالة)</span>
-                                    <small style="color: #666; font-size: 0.85rem;">مساحة القسم: ${formatBytes(catTotalSize)}</small>
+
+                            <div class="case-item">
+
+                                <img
+                                    src="${imgSrc}"
+                                    class="case-thumb"
+                                    alt="صورة الحالة"
+                                    onclick="window.open('${imgSrc}', '_blank')"
+                                    title="انقر لتكبير الصورة"
+                                >
+
+
+                                <div class="case-info">
+
+                                    <strong>
+                                        ${c.title}
+                                    </strong>
+
+                                    <br>
+
+                                    <small style="
+                                        color:#888;
+                                    ">
+                                        الملف: ${c.file}
+                                        |
+                                        الحجم: ${formatBytes(c.size)}
+                                        |
+                                        📅 تاريخ الإضافة:
+                                        ${c.formattedDate}
+                                    </small>
+
                                 </div>
+
+
+                                <div class="btn-group">
+
+                                    <button
+                                        class="edit-btn"
+                                        onclick="startEdit(
+                                            ${c.index},
+                                            '${c.file}',
+                                            '${c.cat}',
+                                            '${c.title}'
+                                        )">
+                                        تعديل
+                                    </button>
+
+
+                                    <button
+                                        class="delete-btn"
+                                        onclick="deleteCase(
+                                            ${c.index},
+                                            '${c.file}'
+                                        )">
+                                        حذف نهائي
+                                    </button>
+
+                                </div>
+
+                            </div>
+
                         `;
 
-                        casesArray.forEach(c => {
-                            const imgSrc = `assets/cases/${c.file}`;
-                            htmlContent += `
-                                <div class="case-item">
-                                    <img src="${imgSrc}" class="case-thumb" alt="صورة الحالة" onclick="window.open('${imgSrc}', '_blank')" title="انقر لتكبير الصورة">
-                                    <div class="case-info">
-                                        <strong>${c.title}</strong><br>
-                                        <small style="color:#888;">الملف: ${c.file} | الحجم: ${formatBytes(c.size)} | 📅 تاريخ الإضافة: ${c.formattedDate}</small>
-                                    </div>
-                                    <div class="btn-group">
-                                        <button class="edit-btn" onclick="startEdit(${c.index}, '${c.file}', '${c.cat}', '${c.title}')">تعديل</button>
-                                        <button class="delete-btn" onclick="deleteCase(${c.index}, '${c.file}')">حذف نهائي</button>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                        htmlContent += `</div>`;
+                    });
+
+
+                    htmlContent += `</div>`;
+
+                }
+
+            }
+
+
+            listDiv.innerHTML =
+                htmlContent;
+
+
+        } catch(e) {
+
+            document.getElementById('cases-list').innerHTML =
+                "حدث خطأ أثناء جلب الحالات.";
+
+        }
+
+    }
+
+
+    function startEdit(
+        index,
+        file,
+        cat,
+        title
+    ) {
+
+        document.getElementById('editIndex').value =
+            index;
+
+        document.getElementById('editFileName').value =
+            file;
+
+        document.getElementById('newTitle').value =
+            title;
+
+        document.getElementById('newCategory').value =
+            cat;
+
+        document.getElementById('form-title').innerText =
+            "تعديل الحالة المحددة:";
+
+        document.getElementById('save-btn').innerText =
+            "حفظ التعديلات";
+
+        document.getElementById('cancel-edit-btn').style.display =
+            "block";
+
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+        });
+
+    }
+
+
+    function resetForm() {
+
+        document.getElementById('editIndex').value =
+            "-1";
+
+        document.getElementById('editFileName').value =
+            "";
+
+        document.getElementById('newTitle').value =
+            "";
+
+        document.getElementById('newFile').value =
+            "";
+
+        document.getElementById('form-title').innerText =
+            "إضافة حالة جديدة:";
+
+        document.getElementById('save-btn').innerText =
+            "رفع وإضافة الحالة";
+
+        document.getElementById('cancel-edit-btn').style.display =
+            "none";
+
+    }
+
+
+    async function deleteCase(
+        index,
+        fileName
+    ) {
+
+        if(!confirm(
+            "⚠️ تنبيه هام: هل أنت متأكد تماماً من رغبتك في الحذف النهائي؟"
+        )) {
+            return;
+        }
+
+
+        const token =
+            localStorage.getItem('ghToken');
+
+
+        try {
+
+            const imgRes =
+                await fetch(
+                    `https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${token}`
+                        }
+                    }
+                );
+
+
+            if(imgRes.ok) {
+
+                const imgData =
+                    await imgRes.json();
+
+
+                await fetch(
+                    `https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`,
+                    {
+                        method: 'DELETE',
+
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+
+                        body: JSON.stringify({
+                            message:
+                                "Delete case image file",
+                            sha:
+                                imgData.sha
+                        })
+                    }
+                );
+
+            }
+
+
+            const listRes =
+                await fetch(
+                    `https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`,
+                    {
+                        headers: {
+                            'Authorization': `token ${token}`
+                        }
+                    }
+                );
+
+
+            const listData =
+                await listRes.json();
+
+
+            let lines =
+                decodeURIComponent(
+                    escape(
+                        atob(listData.content)
+                    )
+                )
+                .split('\n')
+                .filter(l => l.trim());
+
+
+            lines.splice(index, 1);
+
+
+            const newContent =
+                btoa(
+                    unescape(
+                        encodeURIComponent(
+                            lines.join('\n') +
+                            (
+                                lines.length > 0
+                                ? '\n'
+                                : ''
+                            )
+                        )
+                    )
+                );
+
+
+            await fetch(
+                `https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`,
+                {
+                    method: 'PUT',
+
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+
+                    body: JSON.stringify({
+
+                        message:
+                            "Remove case from list",
+
+                        content:
+                            newContent,
+
+                        sha:
+                            listData.sha
+
+                    })
+
+                }
+            );
+
+
+            alert(
+                "تم حذف الحالة والصورة نهائياً بنجاح!"
+            );
+
+
+            loadCases();
+
+
+        } catch(e) {
+
+            alert(
+                "حدث خطأ أثناء محاولة الحذف."
+            );
+
+        }
+
+    }
+
+
+    async function saveCase() {
+
+        const token =
+            localStorage.getItem('ghToken');
+
+
+        const title =
+            document.getElementById('newTitle').value;
+
+
+        const category =
+            document.getElementById('newCategory').value;
+
+
+        const fileInput =
+            document.getElementById('newFile');
+
+
+        const editIndex =
+            parseInt(
+                document.getElementById('editIndex').value
+            );
+
+
+        if(!title) {
+
+            return alert(
+                "الرجاء كتابة وصف الحالة."
+            );
+
+        }
+
+
+        const listRes =
+            await fetch(
+                `https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`,
+                {
+                    headers: {
+                        'Authorization': `token ${token}`
                     }
                 }
-                listDiv.innerHTML = htmlContent;
-            } catch(e) {
-                document.getElementById('cases-list').innerHTML = "حدث خطأ أثناء جلب الحالات.";
-            }
-        }
+            );
 
-        function startEdit(index, file, cat, title) {
-            document.getElementById('editIndex').value = index;
-            document.getElementById('editFileName').value = file;
-            document.getElementById('newTitle').value = title;
-            document.getElementById('newCategory').value = cat;
-            document.getElementById('form-title').innerText = "تعديل الحالة المحددة:";
-            document.getElementById('save-btn').innerText = "حفظ التعديلات";
-            document.getElementById('cancel-edit-btn').style.display = "block";
-            window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
-        }
 
-        function resetForm() {
-            document.getElementById('editIndex').value = "-1";
-            document.getElementById('editFileName').value = "";
-            document.getElementById('newTitle').value = "";
-            document.getElementById('newFile').value = "";
-            document.getElementById('form-title').innerText = "إضافة حالة جديدة:";
-            document.getElementById('save-btn').innerText = "رفع وإضافة الحالة";
-            document.getElementById('cancel-edit-btn').style.display = "none";
-        }
+        const listData =
+            listRes.ok
+            ? await listRes.json()
+            : null;
 
-        async function deleteCase(index, fileName) {
-            if(!confirm("⚠️ تنبيه هام: هل أنت متأكد تماماً من رغبتك في الحذف النهائي؟")) return;
-            const token = localStorage.getItem('ghToken');
-            try {
-                const imgRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`, { headers: { 'Authorization': `token ${token}` }});
-                if(imgRes.ok) {
-                    const imgData = await imgRes.json();
-                    await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`, {
-                        method: 'DELETE',
-                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: "Delete case image file", sha: imgData.sha })
-                    });
-                }
 
-                const listRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
-                const listData = await listRes.json();
-                let lines = decodeURIComponent(escape(atob(listData.content))).split('\n').filter(l => l.trim());
-                lines.splice(index, 1);
-                const newContent = btoa(unescape(encodeURIComponent(lines.join('\n') + (lines.length > 0 ? '\n' : ''))));
-                
-                await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: "Remove case from list", content: newContent, sha: listData.sha })
-                });
-                alert("تم حذف الحالة والصورة نهائياً بنجاح!");
-                loadCases();
-            } catch(e) { alert("حدث خطأ أثناء محاولة الحذف."); }
-        }
+        let lines =
+            listData
+            ? decodeURIComponent(
+                escape(
+                    atob(listData.content)
+                )
+            )
+            .split('\n')
+            .filter(l => l.trim())
+            : [];
 
-        async function saveCase() {
-            const token = localStorage.getItem('ghToken');
-            const title = document.getElementById('newTitle').value;
-            const category = document.getElementById('newCategory').value;
-            const fileInput = document.getElementById('newFile');
-            const editIndex = parseInt(document.getElementById('editIndex').value);
-            
-            if(!title) return alert("الرجاء كتابة وصف الحالة.");
-            
-            const listRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, { headers: { 'Authorization': `token ${token}` }});
-            const listData = listRes.ok ? await listRes.json() : null;
-            let lines = listData ? decodeURIComponent(escape(atob(listData.content))).split('\n').filter(l => l.trim()) : [];
 
-            if(editIndex > -1) {
-                let oldFileName = document.getElementById('editFileName').value;
-                if(fileInput.files[0]) {
-                    const file = fileInput.files[0];
-                    const reader = new FileReader();
-                    reader.onloadend = async () => {
-                        const newFileName = "case-" + Date.now() + ".jpg";
-                        await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${newFileName}`, {
-                            method: 'PUT',
-                            headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ message: "Upload replacement case image", content: reader.result.split(',')[1] })
-                        });
-                        try {
-                            const oldImgRes = await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${oldFileName}`, { headers: { 'Authorization': `token ${token}` }});
-                            if(oldImgRes.ok) {
-                                const oldImgData = await oldImgRes.json();
-                                await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${oldFileName}`, {
-                                    method: 'DELETE',
-                                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ message: "Delete old case image", sha: oldImgData.sha })
-                                });
+        if(editIndex > -1) {
+
+            let oldFileName =
+                document.getElementById(
+                    'editFileName'
+                ).value;
+
+
+            if(fileInput.files[0]) {
+
+                const file =
+                    fileInput.files[0];
+
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onloadend =
+                    async function() {
+
+                        const newFileName =
+                            "case-" +
+                            Date.now() +
+                            ".jpg";
+
+
+                        await fetch(
+                            `https://api.github.com/repos/${repo}/contents/assets/cases/${newFileName}`,
+                            {
+                                method: 'PUT',
+
+                                headers: {
+                                    'Authorization':
+                                        `token ${token}`,
+
+                                    'Content-Type':
+                                        'application/json'
+                                },
+
+                                body: JSON.stringify({
+
+                                    message:
+                                        "Upload replacement case image",
+
+                                    content:
+                                        reader.result.split(',')[1]
+
+                                })
+
                             }
+                        );
+
+
+                        try {
+
+                            const oldImgRes =
+                                await fetch(
+                                    `https://api.github.com/repos/${repo}/contents/assets/cases/${oldFileName}`,
+                                    {
+                                        headers: {
+                                            'Authorization':
+                                                `token ${token}`
+                                        }
+                                    }
+                                );
+
+
+                            if(oldImgRes.ok) {
+
+                                const oldImgData =
+                                    await oldImgRes.json();
+
+
+                                await fetch(
+                                    `https://api.github.com/repos/${repo}/contents/assets/cases/${oldFileName}`,
+                                    {
+                                        method: 'DELETE',
+
+                                        headers: {
+                                            'Authorization':
+                                                `token ${token}`,
+
+                                            'Content-Type':
+                                                'application/json'
+                                        },
+
+                                        body: JSON.stringify({
+
+                                            message:
+                                                "Delete old case image",
+
+                                            sha:
+                                                oldImgData.sha
+
+                                        })
+
+                                    }
+                                );
+
+                            }
+
                         } catch(e) {}
-                        lines[editIndex] = `${newFileName} | ${category} | ${title}`;
-                        await updateCasesFile(token, lines, listData ? listData.sha : null);
+
+
+                        lines[editIndex] =
+                            `${newFileName} | ${category} | ${title}`;
+
+
+                        await updateCasesFile(
+                            token,
+                            lines,
+                            listData
+                            ? listData.sha
+                            : null
+                        );
+
                     };
-                    reader.readAsDataURL(fileInput.files[0]);
-                } else {
-                    lines[editIndex] = `${oldFileName} | ${category} | ${title}`;
-                    await updateCasesFile(token, lines, listData ? listData.sha : null);
-                }
+
+
+                reader.readAsDataURL(
+                    fileInput.files[0]
+                );
+
+
             } else {
-                if(!fileInput.files[0]) return alert("الرجاء اختيار صورة للحالة الجديدة.");
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onloadend = async () => {
-                    const fileName = "case-" + Date.now() + ".jpg";
-                    await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`, {
-                        method: 'PUT',
-                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: "Add new case image", content: reader.result.split(',')[1] })
-                    });
-                    lines.push(`${fileName} | ${category} | ${title}`);
-                    await updateCasesFile(token, lines, listData ? listData.sha : null);
-                };
-                reader.readAsDataURL(file);
+
+                lines[editIndex] =
+                    `${oldFileName} | ${category} | ${title}`;
+
+
+                await updateCasesFile(
+                    token,
+                    lines,
+                    listData
+                    ? listData.sha
+                    : null
+                );
+
             }
+
+
+        } else {
+
+            if(!fileInput.files[0]) {
+
+                return alert(
+                    "الرجاء اختيار صورة للحالة الجديدة."
+                );
+
+            }
+
+
+            const file =
+                fileInput.files[0];
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onloadend =
+                async function() {
+
+                    const fileName =
+                        "case-" +
+                        Date.now() +
+                        ".jpg";
+
+
+                    await fetch(
+                        `https://api.github.com/repos/${repo}/contents/assets/cases/${fileName}`,
+                        {
+                            method: 'PUT',
+
+                            headers: {
+                                'Authorization':
+                                    `token ${token}`,
+
+                                'Content-Type':
+                                    'application/json'
+                            },
+
+                            body: JSON.stringify({
+
+                                message:
+                                    "Add new case image",
+
+                                content:
+                                    reader.result.split(',')[1]
+
+                            })
+
+                        }
+                    );
+
+
+                    lines.push(
+                        `${fileName} | ${category} | ${title}`
+                    );
+
+
+                    await updateCasesFile(
+                        token,
+                        lines,
+                        listData
+                        ? listData.sha
+                        : null
+                    );
+
+                };
+
+
+            reader.readAsDataURL(file);
+
         }
 
-        async function updateCasesFile(token, lines, sha) {
-            const newContent = btoa(unescape(encodeURIComponent(lines.join('\n') + '\n')));
-            const bodyData = { message: "Update cases list via admin", content: newContent };
-            if(sha) bodyData.sha = sha;
-            
-            await fetch(`https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`, {
-                method: 'PUT',
-                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify(bodyData)
-            });
-            alert("تم حفظ التعديلات بنجاح!");
-            resetForm();
-            loadCases();
+    }
+
+
+    async function updateCasesFile(
+        token,
+        lines,
+        sha
+    ) {
+
+        const newContent =
+            btoa(
+                unescape(
+                    encodeURIComponent(
+                        lines.join('\n') +
+                        '\n'
+                    )
+                )
+            );
+
+
+        const bodyData = {
+
+            message:
+                "Update cases list via admin",
+
+            content:
+                newContent
+
+        };
+
+
+        if(sha) {
+
+            bodyData.sha =
+                sha;
+
         }
-    </script>
+
+
+        await fetch(
+            `https://api.github.com/repos/${repo}/contents/assets/cases/cases-list.txt`,
+            {
+                method: 'PUT',
+
+                headers: {
+                    'Authorization':
+                        `token ${token}`,
+
+                    'Content-Type':
+                        'application/json'
+                },
+
+                body:
+                    JSON.stringify(bodyData)
+            }
+        );
+
+
+        alert(
+            "تم حفظ التعديلات بنجاح!"
+        );
+
+
+        resetForm();
+
+        loadCases();
+
+    }
+
+</script>
+
 </body>
 </html>
