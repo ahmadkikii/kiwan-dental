@@ -1,29 +1,61 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDJBF6QRRG"></script>
+
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag(){
+      dataLayer.push(arguments);
+    }
+
     gtag('js', new Date());
     gtag('config', 'G-BDJBF6QRRG');
   </script>
 
+
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#03263b">
-  <meta name="description" content="حجز موعد - عيادة كيوان لطب الأسنان - دمشق">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1">
+
+  <meta
+    name="theme-color"
+    content="#03263b">
+
+  <meta
+    name="description"
+    content="حجز موعد - عيادة كيوان لطب الأسنان - دمشق">
+
   <title>حجز موعد - عيادة كيوان لطب الأسنان</title>
 
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin>
 
-  <link rel="stylesheet" href="styles.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link
+    rel="stylesheet"
+    href="styles.css">
+
 
   <style>
+
+    /* =====================================================
+       الصفحة
+       ===================================================== */
+
     .booking-page-section {
       background: #fdfdfd;
       padding: 60px 0;
@@ -31,6 +63,7 @@
       display: flex;
       align-items: center;
     }
+
 
     .booking-card {
       max-width: 650px;
@@ -43,6 +76,7 @@
       width: 100%;
     }
 
+
     .booking-card h3 {
       color: #03263b;
       text-align: center;
@@ -50,6 +84,7 @@
       font-size: 2rem;
       margin-bottom: 10px;
     }
+
 
     .booking-card p.subtitle {
       text-align: center;
@@ -59,9 +94,11 @@
       line-height: 1.6;
     }
 
+
     .form-group {
       margin-bottom: 20px;
     }
+
 
     .form-group label {
       display: block;
@@ -70,6 +107,7 @@
       font-size: 0.95rem;
       color: #2c3e50;
     }
+
 
     .form-group input,
     .form-group select {
@@ -85,11 +123,17 @@
       background: #fff;
     }
 
+
     .form-group input:focus,
     .form-group select:focus {
       border-color: #27ae60;
-      box-shadow: 0 0 5px rgba(39, 174, 96, 0.2);
+      box-shadow: 0 0 5px rgba(39,174,96,0.2);
     }
+
+
+    /* =====================================================
+       زر الحجز
+       ===================================================== */
 
     .booking-btn {
       width: 100%;
@@ -105,14 +149,17 @@
       font-family: inherit;
     }
 
+
     .booking-btn:hover {
       background: #219653;
     }
+
 
     .booking-btn:disabled {
       opacity: 0.7;
       cursor: not-allowed;
     }
+
 
     #booking-msg {
       margin-top: 15px;
@@ -121,10 +168,12 @@
       font-weight: bold;
     }
 
+
     .back-home {
       text-align: center;
       margin-top: 20px;
     }
+
 
     .back-home a {
       color: #03263b;
@@ -133,652 +182,1642 @@
       font-size: 0.95rem;
     }
 
+
     .back-home a:hover {
       text-decoration: underline;
     }
+
+
+    /* =====================================================
+       التقويم
+       ===================================================== */
+
+    .calendar-wrapper {
+      width: 100%;
+      margin-top: 5px;
+    }
+
+
+    .calendar-box {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #dfe6eb;
+      border-radius: 14px;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+
+    /* رأس التقويم */
+
+    .calendar-header {
+      background: #03263b;
+      color: white;
+      padding: 15px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+
+    .calendar-month-title {
+      flex: 1;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      user-select: none;
+    }
+
+
+    .calendar-nav {
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.25rem;
+      font-family: inherit;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .calendar-nav:hover {
+      background: rgba(255,255,255,0.18);
+    }
+
+
+    .calendar-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+
+    /* أسماء الأيام */
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      background: #f5f7f9;
+      border-bottom: 1px solid #e5eaee;
+    }
+
+
+    .calendar-weekday {
+      text-align: center;
+      padding: 10px 2px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #52606b;
+    }
+
+
+    /* شبكة الأيام */
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      padding: 8px;
+      gap: 5px;
+    }
+
+
+    .calendar-day {
+      min-height: 43px;
+      border: none;
+      background: white;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      color: #263746;
+      cursor: pointer;
+      transition: 0.18s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+
+    .calendar-day:hover:not(.disabled):not(.empty) {
+      background: #edf7f1;
+      color: #219653;
+    }
+
+
+    .calendar-day.empty {
+      cursor: default;
+      background: transparent;
+    }
+
+
+    .calendar-day.disabled {
+      color: #c5cbd0;
+      background: #fafafa;
+      cursor: not-allowed;
+    }
+
+
+    /* الجمعة */
+
+    .calendar-day.friday {
+      color: #c7ccd1;
+      background: #fafafa;
+      cursor: not-allowed;
+    }
+
+
+    /* اليوم */
+
+    .calendar-day.today {
+      box-shadow: inset 0 0 0 1.5px #27ae60;
+      font-weight: 700;
+    }
+
+
+    /* اليوم المختار */
+
+    .calendar-day.selected {
+      background: #27ae60 !important;
+      color: white !important;
+      font-weight: 700;
+      box-shadow: none;
+    }
+
+
+    /* التاريخ المختار أسفل التقويم */
+
+    .selected-date-display {
+      margin-top: 10px;
+      min-height: 22px;
+      text-align: center;
+      color: #03263b;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+
+    .selected-date-display.empty {
+      color: #777;
+      font-weight: 400;
+    }
+
+
+    /* =====================================================
+       موبايل
+       ===================================================== */
+
+    @media (max-width: 600px) {
+
+      .booking-page-section {
+        padding: 30px 0;
+      }
+
+
+      .booking-card {
+        padding: 22px 16px;
+        border-radius: 14px;
+      }
+
+
+      .booking-card h3 {
+        font-size: 1.55rem;
+      }
+
+
+      .calendar-days {
+        padding: 6px;
+        gap: 3px;
+      }
+
+
+      .calendar-day {
+        min-height: 40px;
+        font-size: 0.88rem;
+      }
+
+
+      .calendar-weekday {
+        font-size: 0.7rem;
+        padding: 8px 1px;
+      }
+
+
+      .calendar-month-title {
+        font-size: 1rem;
+      }
+
+    }
+
   </style>
+
 </head>
+
 
 <body>
 
-<a href="https://wa.me/963956766617"
-   class="float-whatsapp"
-   target="_blank"
-   rel="noopener"
-   aria-label="تواصل عبر واتساب">
+
+<a
+  href="https://wa.me/963956766617"
+  class="float-whatsapp"
+  target="_blank"
+  rel="noopener"
+  aria-label="تواصل عبر واتساب">
+
   <span>💬</span>
+
 </a>
 
+
 <header class="site-header">
+
   <div class="container nav-wrap">
 
-    <a class="brand"
-       href="index.html"
-       aria-label="عيادة كيوان لطب الأسنان">
+
+    <a
+      class="brand"
+      href="index.html"
+      aria-label="عيادة كيوان لطب الأسنان">
 
       <span class="brand-text">
+
         <strong>عيادة كيوان</strong>
+
         <small>لطب الأسنان</small>
+
       </span>
 
-      <span class="tooth-logo" aria-hidden="true">♡</span>
+      <span
+        class="tooth-logo"
+        aria-hidden="true">
+
+        ♡
+
+      </span>
 
     </a>
 
-    <button class="menu-toggle"
-            aria-label="فتح القائمة"
-            aria-expanded="false">
+
+    <button
+      class="menu-toggle"
+      aria-label="فتح القائمة"
+      aria-expanded="false">
+
       ☰
+
     </button>
 
+
     <nav class="nav">
-      <a href="index.html#home">الرئيسية</a>
-      <a href="index.html#about">عن العيادة</a>
-      <a href="index.html#services">خدماتنا</a>
-      <a class="active" href="booking.html">حجز موعد</a>
-      <a href="cases.html">شاهد بعض حالاتنا</a>
-      <a href="index.html#contact">تواصل معنا</a>
+
+      <a href="index.html#home">
+        الرئيسية
+      </a>
+
+      <a href="index.html#about">
+        عن العيادة
+      </a>
+
+      <a href="index.html#services">
+        خدماتنا
+      </a>
+
+      <a
+        class="active"
+        href="booking.html">
+
+        حجز موعد
+
+      </a>
+
+      <a href="cases.html">
+        شاهد بعض حالاتنا
+      </a>
+
+      <a href="index.html#contact">
+        تواصل معنا
+      </a>
+
     </nav>
 
-    <a class="btn btn-primary nav-appointment"
-       href="booking.html">
+
+    <a
+      class="btn btn-primary nav-appointment"
+      href="booking.html">
+
       ▣ &nbsp; احجز موعد
+
     </a>
 
+
   </div>
+
 </header>
+
 
 <main>
 
-  <section class="booking-page-section">
 
-    <div class="container">
+<section class="booking-page-section">
 
-      <div class="booking-card">
+<div class="container">
 
-        <h3>حجز موعد في العيادة</h3>
 
-        <p class="subtitle">
-          أوقات العمل: من السبت إلى الخميس<br>
-          (الساعات الكاملة من 9:00 صباحاً حتى 4:00 عصراً)
-        </p>
+<div class="booking-card">
 
-        <div class="form-group">
-          <label>الاسم الكامل:</label>
 
-          <input
-            type="text"
-            id="visitorName"
-            placeholder="أدخل اسمك الكريم">
-        </div>
+<h3>
+حجز موعد في العيادة
+</h3>
 
-        <div class="form-group">
-          <label>رقم الهاتف:</label>
 
-          <input
-            type="tel"
-            id="visitorPhone"
-            placeholder="مثال: 0956766617">
-        </div>
+<p class="subtitle">
 
-        <div class="form-group">
-          <label>تاريخ الموعد:</label>
+أوقات العمل: من السبت إلى الخميس<br>
 
-          <input
-            type="date"
-            id="visitorDate">
-        </div>
+(الساعات الكاملة من 9:00 صباحاً حتى 4:00 عصراً)
 
-        <div class="form-group">
+</p>
 
-          <label>اختر الساعة:</label>
 
-          <select id="visitorHour">
+<!-- =====================================================
+     الاسم
+     ===================================================== -->
 
-            <option value="">
-              اختر ساعة الدوام
-            </option>
+<div class="form-group">
 
-            <option value="09">
-              09:00 صباحاً
-            </option>
+<label>
+الاسم الكامل:
+</label>
 
-            <option value="10">
-              10:00 صباحاً
-            </option>
+<input
+  type="text"
+  id="visitorName"
+  placeholder="أدخل اسمك الكريم">
 
-            <option value="11">
-              11:00 صباحاً
-            </option>
+</div>
 
-            <option value="12">
-              12:00 ظهراً
-            </option>
 
-            <option value="13">
-              01:00 ظهراً
-            </option>
+<!-- =====================================================
+     الهاتف
+     ===================================================== -->
 
-            <option value="14">
-              02:00 عصراً
-            </option>
+<div class="form-group">
 
-            <option value="15">
-              03:00 عصراً
-            </option>
+<label>
+رقم الهاتف:
+</label>
 
-            <option value="16">
-              04:00 عصراً
-            </option>
+<input
+  type="tel"
+  id="visitorPhone"
+  placeholder="مثال: 0956766617">
 
-          </select>
+</div>
 
-        </div>
 
-        <div class="form-group">
+<!-- =====================================================
+     التاريخ
+     ===================================================== -->
 
-          <label>سبب الزيارة:</label>
+<div class="form-group">
 
-          <input
-            type="text"
-            id="visitorNote"
-            placeholder="مثال: كشف دوري">
+<label>
+اختر تاريخ الموعد:
+</label>
 
-        </div>
 
-        <button
-          class="booking-btn"
-          id="bookingButton"
-          onclick="sendBookingRequest()">
+<div class="calendar-wrapper">
 
-          تثبيت وإرسال حجز الموعد
+<div class="calendar-box">
 
-        </button>
 
-        <div id="booking-msg"></div>
+<div class="calendar-header">
 
-        <div class="back-home">
 
-          <a href="index.html">
-            ← العودة إلى الصفحة الرئيسية
-          </a>
+<button
+  type="button"
+  class="calendar-nav"
+  id="prevMonth"
+  aria-label="الشهر السابق">
 
-        </div>
+‹
 
-      </div>
+</button>
 
-    </div>
 
-  </section>
+<div
+  class="calendar-month-title"
+  id="calendarMonthTitle">
+
+</div>
+
+
+<button
+  type="button"
+  class="calendar-nav"
+  id="nextMonth"
+  aria-label="الشهر التالي">
+
+›
+
+</button>
+
+
+</div>
+
+
+<div class="calendar-weekdays">
+
+<div class="calendar-weekday">الأحد</div>
+<div class="calendar-weekday">الاثنين</div>
+<div class="calendar-weekday">الثلاثاء</div>
+<div class="calendar-weekday">الأربعاء</div>
+<div class="calendar-weekday">الخميس</div>
+<div class="calendar-weekday">الجمعة</div>
+<div class="calendar-weekday">السبت</div>
+
+</div>
+
+
+<div
+  class="calendar-days"
+  id="calendarDays">
+
+</div>
+
+
+</div>
+
+
+<div
+  class="selected-date-display empty"
+  id="selectedDateDisplay">
+
+لم يتم اختيار تاريخ بعد
+
+</div>
+
+
+</div>
+
+
+<!--
+هذا الحقل يبقى موجوداً حتى يعمل نظام الحجز
+الأصلي بدون أي تغيير.
+-->
+
+<input
+  type="hidden"
+  id="visitorDate">
+
+</div>
+
+
+<!-- =====================================================
+     الساعة
+     ===================================================== -->
+
+<div class="form-group">
+
+<label>
+اختر الساعة:
+</label>
+
+
+<select id="visitorHour">
+
+
+<option value="">
+اختر ساعة الدوام
+</option>
+
+
+<option value="09">
+09:00 صباحاً
+</option>
+
+
+<option value="10">
+10:00 صباحاً
+</option>
+
+
+<option value="11">
+11:00 صباحاً
+</option>
+
+
+<option value="12">
+12:00 ظهراً
+</option>
+
+
+<option value="13">
+01:00 ظهراً
+</option>
+
+
+<option value="14">
+02:00 عصراً
+</option>
+
+
+<option value="15">
+03:00 عصراً
+</option>
+
+
+<option value="16">
+04:00 عصراً
+</option>
+
+
+</select>
+
+</div>
+
+
+<!-- =====================================================
+     سبب الزيارة
+     ===================================================== -->
+
+<div class="form-group">
+
+<label>
+سبب الزيارة:
+</label>
+
+
+<input
+  type="text"
+  id="visitorNote"
+  placeholder="مثال: كشف دوري">
+
+</div>
+
+
+<!-- =====================================================
+     زر الحجز
+     ===================================================== -->
+
+<button
+  class="booking-btn"
+  id="bookingButton"
+  onclick="sendBookingRequest()">
+
+تثبيت وإرسال حجز الموعد
+
+</button>
+
+
+<div id="booking-msg"></div>
+
+
+<div class="back-home">
+
+<a href="index.html">
+
+← العودة إلى الصفحة الرئيسية
+
+</a>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
 
 </main>
 
+
 <script>
 
-  /* =========================================================
-     Google Apps Script الجديد
-     ========================================================= */
+/* =========================================================
+   Google Apps Script
+   نفس الرابط الموجود عندك
+   ========================================================= */
 
-  const scriptUrl =
-    "https://script.google.com/macros/s/AKfycbzsqHpXmL4_MuF3IIvop0DlBYPx0Z3c0ul7G095HPkbUhEoXF1Ghb1labuGnqnTU6F0/exec";
-
-
-  /* =========================================================
-     ملف الأوقات المغلقة
-     ========================================================= */
-
-  const blockedTimesUrl =
-    "https://raw.githubusercontent.com/ahmadkikii/kiwan-dental/main/assets/blocked-times.json";
+const scriptUrl =
+  "https://script.google.com/macros/s/AKfycbzsqHpXmL4_MuF3IIvop0DlBYPx0Z3c0ul7G095HPkbUhEoXF1Ghb1labuGnqnTU6F0/exec";
 
 
-  /* =========================================================
-     تاريخ اليوم بالتوقيت المحلي
-     ========================================================= */
+/* =========================================================
+   الأوقات المغلقة
+   ========================================================= */
 
-  function getLocalDateString() {
-
-    const now = new Date();
-
-    const year =
-      now.getFullYear();
-
-    const month =
-      String(now.getMonth() + 1).padStart(2, '0');
-
-    const day =
-      String(now.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
-  }
+const blockedTimesUrl =
+  "https://raw.githubusercontent.com/ahmadkikii/kiwan-dental/main/assets/blocked-times.json";
 
 
-  const todayStr =
-    getLocalDateString();
+/* =========================================================
+   أسماء الأشهر بالعربي
+   ========================================================= */
+
+const arabicMonths = [
+
+  "كانون الثاني",
+  "شباط",
+  "آذار",
+  "نيسان",
+  "أيار",
+  "حزيران",
+  "تموز",
+  "آب",
+  "أيلول",
+  "تشرين الأول",
+  "تشرين الثاني",
+  "كانون الأول"
+
+];
 
 
-  document
-    .getElementById('visitorDate')
-    .setAttribute('min', todayStr);
+/* =========================================================
+   الحصول على تاريخ اليوم
+   ========================================================= */
+
+function getLocalDateString() {
+
+  const now = new Date();
+
+  const year =
+    now.getFullYear();
+
+  const month =
+    String(now.getMonth() + 1).padStart(2, '0');
+
+  const day =
+    String(now.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+
+}
 
 
-  /* =========================================================
-     تحميل الأوقات المغلقة
-     ========================================================= */
-
-  async function loadBlockedTimes() {
-
-    try {
-
-      const response =
-        await fetch(
-          blockedTimesUrl + "?v=" + Date.now(),
-          {
-            cache: "no-store"
-          }
-        );
+const todayStr =
+  getLocalDateString();
 
 
-      if (!response.ok) {
-        return [];
-      }
+/* =========================================================
+   متغيرات التقويم
+   ========================================================= */
+
+const todayDate =
+  new Date(
+    todayStr + "T12:00:00"
+  );
 
 
-      const data =
-        await response.json();
+let calendarYear =
+  todayDate.getFullYear();
 
 
-      if (Array.isArray(data)) {
-        return data;
-      }
+let calendarMonth =
+  todayDate.getMonth();
 
 
-      return [];
+/* =========================================================
+   عناصر التقويم
+   ========================================================= */
 
-    } catch (error) {
-
-      return [];
-
-    }
-
-  }
+const calendarDays =
+  document.getElementById(
+    "calendarDays"
+  );
 
 
-  /* =========================================================
-     التحقق من الوقت المغلق
-     ========================================================= */
+const calendarMonthTitle =
+  document.getElementById(
+    "calendarMonthTitle"
+  );
 
-  function isTimeBlocked(
-    blockedTimes,
-    dateInput,
-    hourInput
+
+const selectedDateDisplay =
+  document.getElementById(
+    "selectedDateDisplay"
+  );
+
+
+const visitorDate =
+  document.getElementById(
+    "visitorDate"
+  );
+
+
+const prevMonthButton =
+  document.getElementById(
+    "prevMonth"
+  );
+
+
+const nextMonthButton =
+  document.getElementById(
+    "nextMonth"
+  );
+
+
+/* =========================================================
+   رسم التقويم
+   ========================================================= */
+
+function renderCalendar() {
+
+  calendarDays.innerHTML = "";
+
+
+  calendarMonthTitle.innerText =
+    arabicMonths[calendarMonth] +
+    " " +
+    calendarYear;
+
+
+  /*
+   * أول يوم في الشهر
+   *
+   * الأحد = 0
+   * الاثنين = 1
+   * ...
+   * الجمعة = 5
+   * السبت = 6
+   */
+
+  const firstDay =
+    new Date(
+      calendarYear,
+      calendarMonth,
+      1
+    ).getDay();
+
+
+  const daysInMonth =
+    new Date(
+      calendarYear,
+      calendarMonth + 1,
+      0
+    ).getDate();
+
+
+  /* =====================================================
+     الأيام الفارغة قبل بداية الشهر
+     ===================================================== */
+
+  for (
+    let i = 0;
+    i < firstDay;
+    i++
   ) {
 
-    if (!Array.isArray(blockedTimes)) {
-      return false;
-    }
+    const empty =
+      document.createElement("div");
 
+    empty.className =
+      "calendar-day empty";
 
-    return blockedTimes.some(function(item) {
-
-      return (
-        item &&
-        item.date === dateInput &&
-        Array.isArray(item.hours) &&
-        item.hours.includes(hourInput)
-      );
-
-    });
+    calendarDays.appendChild(empty);
 
   }
 
 
-  /* =========================================================
-     إرسال الحجز
-     ========================================================= */
+  /* =====================================================
+     أيام الشهر
+     ===================================================== */
 
-  async function sendBookingRequest() {
+  for (
+    let day = 1;
+    day <= daysInMonth;
+    day++
+  ) {
 
-    const name =
-      document
-        .getElementById('visitorName')
-        .value
-        .trim();
-
-
-    const phone =
-      document
-        .getElementById('visitorPhone')
-        .value
-        .trim();
+    const button =
+      document.createElement("button");
 
 
-    const dateInput =
-      document
-        .getElementById('visitorDate')
-        .value;
+    button.type =
+      "button";
 
 
-    const hourInput =
-      document
-        .getElementById('visitorHour')
-        .value;
+    button.className =
+      "calendar-day";
 
 
-    const note =
-      document
-        .getElementById('visitorNote')
-        .value
-        .trim();
+    button.innerText =
+      day;
 
 
-    const msgDiv =
-      document.getElementById('booking-msg');
+    const monthString =
+      String(calendarMonth + 1)
+        .padStart(2, "0");
 
 
-    const bookingButton =
-      document.getElementById('bookingButton');
+    const dayString =
+      String(day)
+        .padStart(2, "0");
 
 
-    /* =====================================================
-       التحقق من الحقول
-       ===================================================== */
-
-    if (
-      !name ||
-      !phone ||
-      !dateInput ||
-      !hourInput
-    ) {
-
-      msgDiv.style.color = "red";
-
-      msgDiv.innerText =
-        "الرجاء تعبئة كافة الحقول.";
-
-      return;
-
-    }
+    const dateString =
+      `${calendarYear}-${monthString}-${dayString}`;
 
 
-    /* =====================================================
-       منع التاريخ الماضي
-       ===================================================== */
-
-    if (dateInput < todayStr) {
-
-      msgDiv.style.color = "red";
-
-      msgDiv.innerText =
-        "عذراً، لا يمكن الحجز في تاريخ سابق.";
-
-      return;
-
-    }
-
-
-    /* =====================================================
-       منع الساعات الماضية في نفس اليوم
-       ===================================================== */
-
-    if (dateInput === todayStr) {
-
-      const currentHour =
-        new Date().getHours();
-
-
-      if (
-        parseInt(hourInput, 10) <= currentHour
-      ) {
-
-        msgDiv.style.color = "red";
-
-        msgDiv.innerText =
-          "عذراً، لا يمكن الحجز في وقت مضى من اليوم الحالي.";
-
-        return;
-
-      }
-
-    }
-
-
-    /* =====================================================
-       منع يوم الجمعة
-       ===================================================== */
-
-    const selectedDate =
+    const currentDate =
       new Date(
-        dateInput + "T12:00:00"
+        calendarYear,
+        calendarMonth,
+        day,
+        12,
+        0,
+        0
       );
 
 
-    if (selectedDate.getDay() === 5) {
-
-      msgDiv.style.color = "red";
-
-      msgDiv.innerText =
-        "عذراً، العيادة مغلقة يوم الجمعة.";
-
-      return;
-
-    }
-
-
-    /* =====================================================
-       فحص الأوقات المغلقة
-       ===================================================== */
-
-    msgDiv.style.color = "#03263b";
-
-    msgDiv.innerText =
-      "جاري التحقق من الموعد...";
-
-
-    const blockedTimes =
-      await loadBlockedTimes();
-
+    /* ===================================================
+       تحديد اليوم
+       =================================================== */
 
     if (
-      isTimeBlocked(
-        blockedTimes,
-        dateInput,
-        hourInput
-      )
+      dateString === todayStr
     ) {
 
-      msgDiv.style.color = "red";
-
-      msgDiv.innerText =
-        "عذراً، هذا الوقت مغلق للحجز من قبل العيادة.";
-
-      return;
+      button.classList.add(
+        "today"
+      );
 
     }
 
 
-    /* =====================================================
-       إنشاء وقت الحجز
-       ===================================================== */
+    /* ===================================================
+       يوم الجمعة
+       =================================================== */
 
-    const timeInput =
-      dateInput + " " + hourInput + ":00";
+    if (
+      currentDate.getDay() === 5
+    ) {
 
+      button.classList.add(
+        "friday"
+      );
 
-    /* =====================================================
-       تعطيل الزر مؤقتاً
-       ===================================================== */
+      button.disabled =
+        true;
 
-    bookingButton.disabled = true;
-
-    bookingButton.innerText =
-      "جاري تثبيت الحجز...";
-
-
-    msgDiv.style.color = "#03263b";
-
-    msgDiv.innerText =
-      "جاري تثبيت الموعد...";
+    }
 
 
-    try {
+    /* ===================================================
+       الأيام الماضية
+       =================================================== */
 
-      /* ===================================================
-         جلب المواعيد الحالية من Google Sheets
-         =================================================== */
+    if (
+      dateString < todayStr
+    ) {
 
-      const response =
-        await fetch(
-          scriptUrl + "?v=" + Date.now(),
-          {
-            cache: "no-store"
-          }
-        );
+      button.classList.add(
+        "disabled"
+      );
 
+      button.disabled =
+        true;
 
-      if (!response.ok) {
-
-        throw new Error(
-          "تعذر الاتصال بجدول المواعيد"
-        );
-
-      }
+    }
 
 
-      const bookedTimes =
-        await response.json();
+    /* ===================================================
+       التاريخ المختار
+       =================================================== */
+
+    if (
+      dateString === visitorDate.value
+    ) {
+
+      button.classList.add(
+        "selected"
+      );
+
+    }
 
 
-      /* ===================================================
-         التأكد أن الموعد غير محجوز
-         =================================================== */
+    /* ===================================================
+       اختيار التاريخ
+       =================================================== */
 
-      if (
-        Array.isArray(bookedTimes) &&
-        bookedTimes.includes(timeInput)
-      ) {
+    if (
+      !button.disabled
+    ) {
 
-        msgDiv.style.color = "red";
+      button.addEventListener(
+        "click",
+        function() {
 
-        msgDiv.innerText =
-          "عذراً، هذا الموعد محجوز مسبقاً.";
-
-        bookingButton.disabled = false;
-
-        bookingButton.innerText =
-          "تثبيت وإرسال حجز الموعد";
-
-        return;
-
-      }
-
-
-      /* ===================================================
-         إرسال الحجز إلى Google Apps Script
-
-         نستخدم text/plain بدل application/json
-         حتى لا يحدث CORS Preflight مع Google Apps Script.
-         =================================================== */
-
-      const bookingData = {
-
-        name: name,
-
-        phone: phone,
-
-        time: timeInput,
-
-        note: note
-
-      };
-
-
-      await fetch(
-        scriptUrl,
-        {
-
-          method: "POST",
-
-          mode: "no-cors",
-
-          redirect: "follow",
-
-          headers: {
-
-            "Content-Type":
-              "text/plain;charset=utf-8"
-
-          },
-
-          body:
-            JSON.stringify(bookingData)
+          selectDate(
+            dateString,
+            currentDate
+          );
 
         }
       );
 
-
-      /* ===================================================
-         نجاح الحجز
-         =================================================== */
-
-      msgDiv.style.color = "green";
-
-      msgDiv.innerText =
-        "تم حجز موعدك بنجاح وسنؤكد لك قريباً!";
+    }
 
 
-      /* ===================================================
-         تفريغ الحقول
-         =================================================== */
+    calendarDays.appendChild(
+      button
+    );
 
-      document
-        .getElementById('visitorName')
-        .value = "";
+  }
 
 
-      document
-        .getElementById('visitorPhone')
-        .value = "";
+  /* =====================================================
+     منع الرجوع قبل الشهر الحالي
+     ===================================================== */
+
+  if (
+    calendarYear === todayDate.getFullYear() &&
+    calendarMonth === todayDate.getMonth()
+  ) {
+
+    prevMonthButton.disabled =
+      true;
+
+  } else {
+
+    prevMonthButton.disabled =
+      false;
+
+  }
+
+}
 
 
-      document
-        .getElementById('visitorDate')
-        .value = "";
+/* =========================================================
+   اختيار التاريخ
+   ========================================================= */
+
+function selectDate(
+  dateString,
+  dateObject
+) {
+
+  /*
+   * نخزن التاريخ في الحقل الأصلي
+   * حتى يبقى نظام الحجز كما هو.
+   */
+
+  visitorDate.value =
+    dateString;
 
 
-      document
-        .getElementById('visitorHour')
-        .value = "";
+  /*
+   * عرض التاريخ للمريض
+   */
+
+  const dayName =
+    dateObject.toLocaleDateString(
+      "ar-SY",
+      {
+        weekday: "long"
+      }
+    );
 
 
-      document
-        .getElementById('visitorNote')
-        .value = "";
+  const dayNumber =
+    dateObject.getDate();
 
 
-    } catch (err) {
+  const monthName =
+    arabicMonths[
+      dateObject.getMonth()
+    ];
 
-      console.error(err);
 
-      msgDiv.style.color = "red";
+  const year =
+    dateObject.getFullYear();
 
-      msgDiv.innerText =
-        "حدث خطأ أثناء إرسال الحجز، يرجى المحاولة لاحقاً.";
+
+  selectedDateDisplay.classList.remove(
+    "empty"
+  );
+
+
+  selectedDateDisplay.innerText =
+    "التاريخ المختار: " +
+    dayName +
+    " " +
+    dayNumber +
+    " " +
+    monthName +
+    " " +
+    year;
+
+
+  renderCalendar();
+
+}
+
+
+/* =========================================================
+   الشهر السابق
+   ========================================================= */
+
+prevMonthButton.addEventListener(
+  "click",
+  function() {
+
+    if (
+      calendarMonth === 0
+    ) {
+
+      calendarMonth =
+        11;
+
+      calendarYear--;
+
+    } else {
+
+      calendarMonth--;
 
     }
 
 
-    /* =====================================================
-       إعادة تفعيل الزر
-       ===================================================== */
+    renderCalendar();
 
-    bookingButton.disabled = false;
+  }
+);
 
-    bookingButton.innerText =
-      "تثبيت وإرسال حجز الموعد";
+
+/* =========================================================
+   الشهر التالي
+   ========================================================= */
+
+nextMonthButton.addEventListener(
+  "click",
+  function() {
+
+    if (
+      calendarMonth === 11
+    ) {
+
+      calendarMonth =
+        0;
+
+      calendarYear++;
+
+    } else {
+
+      calendarMonth++;
+
+    }
+
+
+    renderCalendar();
+
+  }
+);
+
+
+/* =========================================================
+   تشغيل التقويم
+   ========================================================= */
+
+renderCalendar();
+
+
+/* =========================================================
+   تحميل الأوقات المغلقة
+   ========================================================= */
+
+async function loadBlockedTimes() {
+
+  try {
+
+    const response =
+      await fetch(
+        blockedTimesUrl +
+        "?v=" +
+        Date.now(),
+        {
+          cache: "no-store"
+        }
+      );
+
+
+    if (!response.ok) {
+
+      return [];
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (
+      Array.isArray(data)
+    ) {
+
+      return data;
+
+    }
+
+
+    return [];
+
+  } catch (error) {
+
+    return [];
 
   }
 
+}
+
+
+/* =========================================================
+   التحقق من الوقت المغلق
+   ========================================================= */
+
+function isTimeBlocked(
+  blockedTimes,
+  dateInput,
+  hourInput
+) {
+
+  if (
+    !Array.isArray(
+      blockedTimes
+    )
+  ) {
+
+    return false;
+
+  }
+
+
+  return blockedTimes.some(
+    function(item) {
+
+      return (
+
+        item &&
+
+        item.date === dateInput &&
+
+        Array.isArray(
+          item.hours
+        ) &&
+
+        item.hours.includes(
+          hourInput
+        )
+
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   إرسال الحجز
+   ========================================================= */
+
+async function sendBookingRequest() {
+
+
+  const name =
+    document
+      .getElementById(
+        'visitorName'
+      )
+      .value
+      .trim();
+
+
+  const phone =
+    document
+      .getElementById(
+        'visitorPhone'
+      )
+      .value
+      .trim();
+
+
+  const dateInput =
+    document
+      .getElementById(
+        'visitorDate'
+      )
+      .value;
+
+
+  const hourInput =
+    document
+      .getElementById(
+        'visitorHour'
+      )
+      .value;
+
+
+  const note =
+    document
+      .getElementById(
+        'visitorNote'
+      )
+      .value
+      .trim();
+
+
+  const msgDiv =
+    document.getElementById(
+      'booking-msg'
+    );
+
+
+  const bookingButton =
+    document.getElementById(
+      'bookingButton'
+    );
+
+
+  /* =====================================================
+     التحقق من الحقول
+     ===================================================== */
+
+  if (
+    !name ||
+    !phone ||
+    !dateInput ||
+    !hourInput
+  ) {
+
+    msgDiv.style.color =
+      "red";
+
+    msgDiv.innerText =
+      "الرجاء تعبئة كافة الحقول واختيار تاريخ الموعد.";
+
+    return;
+
+  }
+
+
+  /* =====================================================
+     منع التاريخ الماضي
+     ===================================================== */
+
+  if (
+    dateInput < todayStr
+  ) {
+
+    msgDiv.style.color =
+      "red";
+
+    msgDiv.innerText =
+      "عذراً، لا يمكن الحجز في تاريخ سابق.";
+
+    return;
+
+  }
+
+
+  /* =====================================================
+     منع الساعات الماضية في نفس اليوم
+     ===================================================== */
+
+  if (
+    dateInput === todayStr
+  ) {
+
+    const currentHour =
+      new Date().getHours();
+
+
+    if (
+      parseInt(
+        hourInput,
+        10
+      ) <= currentHour
+    ) {
+
+      msgDiv.style.color =
+        "red";
+
+      msgDiv.innerText =
+        "عذراً، لا يمكن الحجز في وقت مضى من اليوم الحالي.";
+
+      return;
+
+    }
+
+  }
+
+
+  /* =====================================================
+     منع يوم الجمعة
+     ===================================================== */
+
+  const selectedDate =
+    new Date(
+      dateInput +
+      "T12:00:00"
+    );
+
+
+  if (
+    selectedDate.getDay() === 5
+  ) {
+
+    msgDiv.style.color =
+      "red";
+
+    msgDiv.innerText =
+      "عذراً، العيادة مغلقة يوم الجمعة.";
+
+    return;
+
+  }
+
+
+  /* =====================================================
+     فحص الأوقات المغلقة
+     ===================================================== */
+
+  msgDiv.style.color =
+    "#03263b";
+
+  msgDiv.innerText =
+    "جاري التحقق من الموعد...";
+
+
+  const blockedTimes =
+    await loadBlockedTimes();
+
+
+  if (
+    isTimeBlocked(
+      blockedTimes,
+      dateInput,
+      hourInput
+    )
+  ) {
+
+    msgDiv.style.color =
+      "red";
+
+    msgDiv.innerText =
+      "عذراً، هذا الوقت مغلق للحجز من قبل العيادة.";
+
+    return;
+
+  }
+
+
+  /* =====================================================
+     إنشاء وقت الحجز
+     ===================================================== */
+
+  const timeInput =
+    dateInput +
+    " " +
+    hourInput +
+    ":00";
+
+
+  /* =====================================================
+     تعطيل الزر مؤقتاً
+     ===================================================== */
+
+  bookingButton.disabled =
+    true;
+
+
+  bookingButton.innerText =
+    "جاري تثبيت الحجز...";
+
+
+  msgDiv.style.color =
+    "#03263b";
+
+
+  msgDiv.innerText =
+    "جاري تثبيت الموعد...";
+
+
+  try {
+
+
+    /* ===================================================
+       جلب المواعيد الحالية
+       =================================================== */
+
+    const response =
+      await fetch(
+        scriptUrl +
+        "?v=" +
+        Date.now(),
+        {
+          cache: "no-store"
+        }
+      );
+
+
+    if (
+      !response.ok
+    ) {
+
+      throw new Error(
+        "تعذر الاتصال بجدول المواعيد"
+      );
+
+    }
+
+
+    const bookedTimes =
+      await response.json();
+
+
+    /* ===================================================
+       التأكد أن الموعد غير محجوز
+       =================================================== */
+
+    if (
+      Array.isArray(
+        bookedTimes
+      ) &&
+      bookedTimes.includes(
+        timeInput
+      )
+    ) {
+
+      msgDiv.style.color =
+        "red";
+
+
+      msgDiv.innerText =
+        "عذراً، هذا الموعد محجوز مسبقاً.";
+
+
+      bookingButton.disabled =
+        false;
+
+
+      bookingButton.innerText =
+        "تثبيت وإرسال حجز الموعد";
+
+
+      return;
+
+    }
+
+
+    /* ===================================================
+       إرسال الحجز
+       =================================================== */
+
+    const bookingData = {
+
+      name: name,
+
+      phone: phone,
+
+      time: timeInput,
+
+      note: note
+
+    };
+
+
+    await fetch(
+      scriptUrl,
+      {
+
+        method: "POST",
+
+        mode: "no-cors",
+
+        redirect: "follow",
+
+        headers: {
+
+          "Content-Type":
+            "text/plain;charset=utf-8"
+
+        },
+
+        body:
+          JSON.stringify(
+            bookingData
+          )
+
+      }
+    );
+
+
+    /* ===================================================
+       نجاح الحجز
+       =================================================== */
+
+    msgDiv.style.color =
+      "green";
+
+
+    msgDiv.innerText =
+      "تم حجز موعدك بنجاح وسنؤكد لك قريباً!";
+
+
+    /* ===================================================
+       تفريغ الحقول
+       =================================================== */
+
+    document
+      .getElementById(
+        'visitorName'
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        'visitorPhone'
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        'visitorDate'
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        'visitorHour'
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        'visitorNote'
+      )
+      .value = "";
+
+
+    /* ===================================================
+       إعادة التقويم لحالته الطبيعية
+       =================================================== */
+
+    selectedDateDisplay.classList.add(
+      "empty"
+    );
+
+
+    selectedDateDisplay.innerText =
+      "لم يتم اختيار تاريخ بعد";
+
+
+    renderCalendar();
+
+
+  } catch (err) {
+
+
+    console.error(err);
+
+
+    msgDiv.style.color =
+      "red";
+
+
+    msgDiv.innerText =
+      "حدث خطأ أثناء إرسال الحجز، يرجى المحاولة لاحقاً.";
+
+  }
+
+
+  /* =====================================================
+     إعادة تفعيل الزر
+     ===================================================== */
+
+  bookingButton.disabled =
+    false;
+
+
+  bookingButton.innerText =
+    "تثبيت وإرسال حجز الموعد";
+
+}
+
 </script>
+
 
 </body>
 </html>
